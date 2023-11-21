@@ -1,0 +1,47 @@
+[
+  {
+    "nombre": "Productazo1",
+    "descripcion": "Descripcion 1",
+    "precio": 12345,
+    "imagen": "Imagen 1",
+    "codigo": "P100",
+    "stock": 20,
+    "id": 1
+  },
+  {
+    "nombre": "Productazo 2",
+    "descripcion": "Descripcion 2",
+    "precio": 23456,
+    "imagen": "Imagen 2",
+    "codigo": "P101",
+    "stock": 20,
+    "id": 2
+  },
+  {
+    "nombre": "Productazo3",
+    "descripcion": "Descripcion 2",
+    "precio": 12345,
+    "imagen": "Imagen 1",
+    "codigo": "P102",
+    "stock": 20,
+    "id": 3
+  },
+  {
+    "nombre": "Productazo4",
+    "descripcion": "Descripcion 4",
+    "precio": 12345,
+    "imagen": "Imagen 1",
+    "codigo": "P103",
+    "stock": 20,
+    "id": 4
+  },
+  {
+    "nombre": "Productazo5",
+    "descripcion": "Descripcion 5",
+    "precio": 12345,
+    "imagen": "Imagen 1",
+    "codigo": "P104",
+    "stock": 20,
+    "id": 5
+  }
+]
