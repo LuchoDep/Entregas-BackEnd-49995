@@ -23,13 +23,13 @@ class ProductManager {
             return;
         }
 
-        this.productoId++;
-        const nuevoProducto = { ...producto, id: this.productoId }
+        this.productoId = this.productos.length > 0 ? this.productos[this.productos.length - 1].id : 0;
+        const nuevoProducto = { ...producto, id: this.productoId + 1 };
         this.productos.push(nuevoProducto);
 
         await this.guardarProductos();
-        
-        console.log(`Nuevo producto`, nuevoProducto)
+
+        console.log(`Nuevo producto`, nuevoProducto);
 
         return this.productos;
 
@@ -40,6 +40,8 @@ class ProductManager {
 
             if (fs.existsSync(this.path)) {
                 const productos = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'))
+
+                this.productos = productos;
 
                 return productos;
 
@@ -89,27 +91,55 @@ class ProductManager {
 export default ProductManager;
 
 
-// const productManager = new ProductManager();
-// const producto1 = {
-//     nombre: `Productazo1`,
-//     descripcion: `Descripcion 1`,
-//     precio: 12345,
-//     imagen: `Imagen 1`,
-//     codigo: `P100`,
-//     stock: 20,
-// }
+const productManager = new ProductManager();
+const producto1 = {
+    nombre: `Productazo1`,
+    descripcion: `Descripcion 1`,
+    precio: 12345,
+    imagen: `Imagen 1`,
+    codigo: `P100`,
+    stock: 20,
+}
 
-// const producto2 = {
-//     nombre: `Productazo 2`,
-//     descripcion: `Descripcion 2`,
-//     precio: 23456,
-//     imagen: `Imagen 2`,
-//     codigo: `P101`,
-//     stock: 20,
-// }
+const producto2 = {
+    nombre: `Productazo 2`,
+    descripcion: `Descripcion 2`,
+    precio: 23456,
+    imagen: `Imagen 2`,
+    codigo: `P101`,
+    stock: 20,
+}
+const producto3 = {
+    nombre: `Productazo3`,
+    descripcion: `Descripcion 2`,
+    precio: 12345,
+    imagen: `Imagen 1`,
+    codigo: `P102`,
+    stock: 20,
+}
+const producto4 = {
+    nombre: `Productazo4`,
+    descripcion: `Descripcion 4`,
+    precio: 12345,
+    imagen: `Imagen 1`,
+    codigo: `P103`,
+    stock: 20,
+}
+const producto5 = {
+    nombre: `Productazo5`,
+    descripcion: `Descripcion 5`,
+    precio: 12345,
+    imagen: `Imagen 1`,
+    codigo: `P104`,
+    stock: 20,
+}
 
-// productManager.addProduct(producto1);
-// productManager.addProduct(producto2);
+productManager.addProducto(producto1);
+productManager.addProducto(producto2);
+productManager.addProducto(producto3);
+productManager.addProducto(producto4);
+productManager.addProducto(producto5);
+
 
 // const allProducts = productManager.getProductos();
 // console.log(`Todos los productos:`, allProducts);
