@@ -37,21 +37,14 @@ class ProductManager {
 
     async getProductos() {
         try {
-
             if (fs.existsSync(this.path)) {
                 const productos = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'))
-
                 this.productos = productos;
-
                 return productos;
-
             } else {
-
                 return [];
             }
-
         } catch (error) {
-
             return error;
         }
     }
