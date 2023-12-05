@@ -1,11 +1,11 @@
 import { Router } from "express";
+import  __dirname  from "../utils.js"
 import cartManager from "../CartManager.js"
 import ProductManager from "../ProductManager.js"
 
 const cartRouter = Router()
 const manager = new cartManager()
-const products = new ProductManager("../../files/productos.json")
-
+const products = new ProductManager(__dirname + "/files/productos.json");
 
 cartRouter.get('/', async (req, res) => {
 

@@ -18,5 +18,15 @@
     "stock": 20,
     "status": true,
     "id": 2
+  },
+  {
+    "nombre": "Productazo3",
+    "descripcion": "Descripcion 3",
+    "precio": 555,
+    "imagen": "Imagen 1",
+    "codigo": "P112",
+    "stock": 20,
+    "status": true,
+    "id": 3
   }
 ]

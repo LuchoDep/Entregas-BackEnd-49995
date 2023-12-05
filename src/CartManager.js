@@ -6,7 +6,7 @@ class CartManager {
     }
 
     async getCarts(){
-        const data = JSON.parse(await fs.promises.readFile(this.cart,'utf-8'))
+        const data = JSON.parse(await fs.promises.readFile(this.path,'utf-8'))
         return data
         
     }
@@ -20,7 +20,7 @@ class CartManager {
         newCart.id = await this.getId()
         let data = await this.getCarts()
         data.push(newCart)
-        await fs.promises.writeFile(this.cart,JSON.stringify(data))
+        await fs.promises.writeFile(this.path,JSON.stringify(data))
         
     }
  
@@ -48,7 +48,7 @@ class CartManager {
                     cartProducts.push({ ...product, id: pid, quantity: 1 });
                 }
     
-                await fs.promises.writeFile(this.cart, JSON.stringify(carts));
+                await fs.promises.writeFile(this.path, JSON.stringify(carts));
             } else {
                 console.log("Cart not found");
             }

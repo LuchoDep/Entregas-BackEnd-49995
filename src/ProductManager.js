@@ -8,11 +8,11 @@ class ProductManager {
         this.productoId = 0;
     }
 
-    async guardarProductos() {
+    async guardarProducts() {
         await fs.writeFileSync(this.path, JSON.stringify(this.productos, null, 2), 'utf-8');
     }
 
-    async addProducto(producto) {
+    async addProduct(producto) {
         if (!producto.nombre || !producto.descripcion || !producto.precio || !producto.imagen || !producto.codigo || !producto.stock) {
             console.error(`Todos los campos son obligatorios`);
             return;
@@ -27,7 +27,7 @@ class ProductManager {
         const nuevoProducto = { ...producto, id: this.productoId + 1 };
         this.productos.push(nuevoProducto);
 
-        await this.guardarProductos();
+        await this.guardarProducts();
 
         console.log(`Nuevo producto`, nuevoProducto);
 
@@ -35,7 +35,7 @@ class ProductManager {
 
     }
 
-    async getProductos() {
+    async getProducts() {
         try {
             if (fs.existsSync(this.path)) {
                 const productos = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'))
@@ -49,9 +49,9 @@ class ProductManager {
         }
     }
 
-    async getProductosById(id) {
+    async getProductsById(id) {
 
-        const productos = await this.getProductos();
+        const productos = await this.getProducts();
 
         let producto = productos.find(p => p.id == id)
         if (!producto) {
@@ -60,7 +60,7 @@ class ProductManager {
         return producto;
     }
 
-    async updateProducto(id, updatedFields) {
+    async updateProduct(id, updatedFields) {
         const index = this.productos.findIndex(p => p.id === id);
         if (index !== -1) {
             this.productos[index] = { ...this.productos[index], ...updatedFields };
@@ -70,11 +70,11 @@ class ProductManager {
         return false;
     }
 
-    async deleteProducto(id) {
+    async deleteProduct(id) {
         const index = this.productos.findIndex(p => p.id === id);
         if (index !== -1) {
             this.productos.splice(index, 1);
-            await this.guardarProductos();
+            await this.guardarProducts();
             return true;
         }
         return false;

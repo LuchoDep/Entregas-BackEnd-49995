@@ -1,13 +1,15 @@
 import { Router } from "express";
+import  __dirname  from "../utils.js"
 import ProductManager from "../ProductManager.js";
-const prodManager = new ProductManager("./files/productos.json");
+
+const prodManager = new ProductManager(__dirname + "/files/productos.json");
 const productRouter = Router();
 
 productRouter.get("/", async (req, res) => {
     const limit = req.query.limit;
 
     try {
-        const productos = await prodManager.getProductos();
+        const productos = await prodManager.getProducts();
         if (limit) {
             res.json(productos.slice(0, limit));
         } else {
@@ -23,7 +25,7 @@ productRouter.get("/:pid", async (req, res) => {
     const pid = req.params.pid;
 
     try {
-        const producto = await prodManager.getProductosById(parseInt(pid));
+        const producto = await prodManager.getProductsById(parseInt(pid));
         if (producto) {
             res.json(producto);
         } else {
@@ -42,20 +44,20 @@ productRouter.post("/", async (req, res) => {
 		product.status = true
 	};
 
-	await prodManager.addProducto(product);
+	await prodManager.addProduct(product);
 	res.status(200).send("Producto agregado");
 });
 
 productRouter.put("/:pid", async (req, res) => {
 	const id = parseInt(req.params.pid);
 	const update = req.body;
-	await prodManager.updateProducto(id, update);
+	await prodManager.updateProduct(id, update);
 	res.send("Producto actualizado");
 });
 
 productRouter.delete("/:pid", async (req, res) => {
 	const id = parseInt(req.params.pid);
-	await prodManager.deleteProducto(id);
+	await prodManager.deleteProduct(id);
 	res.send("Producto eliminado");
 });
 
