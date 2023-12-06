@@ -29,24 +29,20 @@ app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter)
 
 
-socketServer.on(`connection`, async (socket) => {
+socketServer.on("connection", (socket) => {
 
-    console.log(`Se conectó el usuario`, socket.id);
+    console.log("Nuevo cliente conectado con ID:", socket.id);
 
-    socket.emit(`productos`, await productManager.getProducts());
-
-    socketServer.to(socket.id).emit('realTimeProductsUpdate', { products });
-
-    socket.on('addProduct', async (data) => {
-
-        console.log('Mensaje recibido desde el cliente:', data);
+    socket.on('addProduct', async (productData) => {
         try {
-            if (data === 'productChanged') {
-                const products = await productManager.consultarProductos();
-                io.emit('realTimeProductsUpdate', { products });
-            }
+            console.log('Datos del producto recibidos en el servidor:', productData);
+
+            await productManager.getProducts();
+            await productManager.addProduct(productData.nombre, productData.descripcion, productData.precio, productData.imagen, productData.codigo, productData.stock);
+
+            socketServer.emit('newProduct', productData);
         } catch (error) {
-            console.error('Error al manejar el mensaje:', error.message);
+            console.error('Error al agregar producto:', error.message);
         }
-    })
+    });
 });

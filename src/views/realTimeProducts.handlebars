@@ -1,20 +1,31 @@
-<div id="productos">
-    <h1>Productos:</h1>
-    <ul>
-        {{#each products}}
-        <li>
-            <h2>{{nombre}}</h2>
-            <p>{{descripcion}}</p>
-            <p>Precio: {{precio}}</p>
-            <p>Código {{codigo}}</p>
-            <p>Stock: {{stock}}</p>
-        </li>
-        {{/each}}
-    </ul>
+<h1>Agregar Nuevo Producto</h1>
+  <form id="addProductForm">
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required>
 
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-    <script src="/js/realTimeProducts.js"></script>
-</div>
+    <label for="code">Código:</label>
+    <input type="text" id="code" name="code" required>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/public.js"></script>
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price" step="0.01" required>
+
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" name="stock" required>
+
+    <label for="description">Descripción:</label>
+    <input type="text" id="description" name="description">
+
+    <button type="submit">Agregar Producto</button>
+  </form>
+
+   <div id="list-products">
+        <h2>Lista de Productos</h2>
+        <ul id="products-list">
+            {{#each products}}
+                <li>Nombre: {{this.nombre}}, Precio: {{this.precio}}, Código: {{this.codigo}}, Descripción: {{this.descripcion}}</li>
+            {{/each}}
+        </ul>
+    </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/index.js"></script>
