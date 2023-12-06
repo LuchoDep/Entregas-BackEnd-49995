@@ -1,5 +1,5 @@
 <h1>Agregar Nuevo Producto</h1>
-  <form id="addProductForm">
+<form id="addProductForm">
     <label for="title">Título:</label>
     <input type="text" id="title" name="title" required>
 
@@ -15,17 +15,21 @@
     <label for="description">Descripción:</label>
     <input type="text" id="description" name="description">
 
+    <label for="image">Imagen:</label>
+    <input type="text" id="image" name="image" required>
+
     <button type="submit">Agregar Producto</button>
-  </form>
+</form>
 
-   <div id="list-products">
-        <h2>Lista de Productos</h2>
-        <ul id="products-list">
-            {{#each products}}
-                <li>Nombre: {{this.nombre}}, Precio: {{this.precio}}, Código: {{this.codigo}}, Descripción: {{this.descripcion}}</li>
-            {{/each}}
-        </ul>
-    </div>
+<div id="list-products">
+    <h2>Lista de Productos</h2>
+    <ul id="products-list">
+        {{#each products}}
+        <li>Nombre: {{this.nombre}}, Precio: {{this.precio}}, Código: {{this.codigo}}, Descripción: {{this.descripcion}}
+        </li>
+        {{/each}}
+    </ul>
+</div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/index.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

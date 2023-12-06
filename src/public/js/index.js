@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const codeInput = document.getElementById('code');
     const stockInput = document.getElementById('stock');
     const descriptionInput = document.getElementById('description');
+    const imageInput = document.getElementById('image'); //placeholder, no integré multer
     const productList = document.getElementById('products-list');
   
     const submitProductForm = (event) => {
@@ -17,8 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const codigo = codeInput.value;
         const stock = stockInput.value;
         const descripcion = descriptionInput.value;
+        const imagen = imageInput.value;
   
-        socketClient.emit('addProduct', { nombre, precio, codigo, stock, descripcion }); 
+        socketClient.emit('addProduct', { nombre, descripcion, precio, imagen, codigo, stock }); 
         addProductForm.reset();
     };
 
