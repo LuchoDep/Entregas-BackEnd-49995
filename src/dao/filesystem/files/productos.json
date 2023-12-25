@@ -1,0 +1,562 @@
+[
+    {
+        "title": "Teléfono inteligente Galaxy S22",
+        "description": "Potente teléfono inteligente con cámara de última generación y pantalla AMOLED.",
+        "price": 899.99,
+        "thumbnail": "https://ejemplo.com/thumbnail1.jpg",
+        "code": "PHN001",
+        "stock": 300,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Portátil Dell XPS 15",
+        "description": "Portátil ultradelgado con procesador potente y pantalla táctil de alta resolución.",
+        "price": 1599.99,
+        "thumbnail": "https://ejemplo.com/thumbnail2.jpg",
+        "code": "LPT002",
+        "stock": 150,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Camiseta Polo clásica",
+        "description": "Camiseta de algodón suave con diseño clásico y comodidad garantizada.",
+        "price": 29.99,
+        "thumbnail": "https://ejemplo.com/thumbnail3.jpg",
+        "code": "SHRT003",
+        "stock": 500,
+        "status": true,
+        "category": "Ropa"
+    },
+    {
+        "title": "Cafetera programable",
+        "description": "Cafetera automática con molinillo integrado y capacidad para preparar varias tazas.",
+        "price": 79.99,
+        "thumbnail": "https://ejemplo.com/thumbnail4.jpg",
+        "code": "CFF005",
+        "stock": 200,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Smartwatch FitPro",
+        "description": "Smartwatch resistente al agua con seguimiento de actividad y monitor de ritmo cardíaco.",
+        "price": 49.99,
+        "thumbnail": "https://ejemplo.com/thumbnail5.jpg",
+        "code": "WTCH006",
+        "stock": 400,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Altavoces Bluetooth portátiles",
+        "description": "Altavoces inalámbricos con gran calidad de sonido y batería de larga duración.",
+        "price": 69.99,
+        "thumbnail": "https://ejemplo.com/thumbnail6.jpg",
+        "code": "SPK007",
+        "stock": 250,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Zapatillas deportivas AirMax",
+        "description": "Zapatillas de deporte cómodas y transpirables con tecnología AirMax.",
+        "price": 89.99,
+        "thumbnail": "https://ejemplo.com/thumbnail7.jpg",
+        "code": "SHO008",
+        "stock": 300,
+        "status": true,
+        "category": "Ropa"
+    },
+    {
+        "title": "Aspiradora robotizada",
+        "description": "Aspiradora inteligente con tecnología de mapeo y control desde el móvil.",
+        "price": 199.99,
+        "thumbnail": "https://ejemplo.com/thumbnail8.jpg",
+        "code": "VAC009",
+        "stock": 120,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Auriculares inalámbricos NoiseBlast",
+        "description": "Auriculares inalámbricos con cancelación de ruido y alta calidad de sonido.",
+        "price": 129.99,
+        "thumbnail": "https://ejemplo.com/thumbnail9.jpg",
+        "code": "EAR010",
+        "stock": 180,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Mesa de centro moderna",
+        "description": "Mesa de centro elegante con diseño moderno y amplio espacio de almacenamiento.",
+        "price": 299.99,
+        "thumbnail": "https://ejemplo.com/thumbnail10.jpg",
+        "code": "TBL011",
+        "stock": 80,
+        "status": true,
+        "category": "Muebles"
+    },
+    {
+        "title": "Reloj inteligente con GPS",
+        "description": "Reloj inteligente con GPS, medidor de actividad física y notificaciones inteligentes.",
+        "price": 149.99,
+        "thumbnail": "https://ejemplo.com/thumbnail11.jpg",
+        "code": "WAT012",
+        "stock": 250,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Silla ergonómica de oficina",
+        "description": "Silla giratoria ajustable con soporte lumbar y diseño ergonómico para comodidad.",
+        "price": 129.99,
+        "thumbnail": "https://ejemplo.com/thumbnail12.jpg",
+        "code": "CHR013",
+        "stock": 100,
+        "status": true,
+        "category": "Muebles"
+    },
+    {
+        "title": "Set de herramientas profesionales",
+        "description": "Set completo de herramientas profesionales para trabajos de bricolaje y reparaciones.",
+        "price": 199.99,
+        "thumbnail": "https://ejemplo.com/thumbnail13.jpg",
+        "code": "TLS014",
+        "stock": 150,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Cámara de seguridad HD",
+        "description": "Cámara de seguridad HD para hogares con visión nocturna y detección de movimiento.",
+        "price": 79.99,
+        "thumbnail": "https://ejemplo.com/thumbnail14.jpg",
+        "code": "CAM015",
+        "stock": 200,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Gafas de sol polarizadas",
+        "description": "Gafas de sol polarizadas con protección UV y diseño moderno.",
+        "price": 39.99,
+        "thumbnail": "https://ejemplo.com/thumbnail15.jpg",
+        "code": "SNG016",
+        "stock": 300,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Mochila para portátil",
+        "description": "Mochila resistente para portátiles con compartimento acolchado y múltiples bolsillos.",
+        "price": 49.99,
+        "thumbnail": "https://ejemplo.com/thumbnail16.jpg",
+        "code": "BAG017",
+        "stock": 120,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Lámpara de pie moderna",
+        "description": "Lámpara de pie con diseño moderno y regulador de intensidad luminosa.",
+        "price": 89.99,
+        "thumbnail": "https://ejemplo.com/thumbnail17.jpg",
+        "code": "LMP018",
+        "stock": 80,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Cepillo eléctrico para limpieza facial",
+        "description": "Cepillo eléctrico para limpieza facial con varios modos y resistente al agua.",
+        "price": 34.99,
+        "thumbnail": "https://ejemplo.com/thumbnail18.jpg",
+        "code": "CLN019",
+        "stock": 150,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Set de ollas y sartenes antiadherentes",
+        "description": "Set de ollas y sartenes antiadherentes de alta calidad para cocina.",
+        "price": 149.99,
+        "thumbnail": "https://ejemplo.com/thumbnail19.jpg",
+        "code": "COO020",
+        "stock": 100,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Altavoz inteligente con asistente de voz",
+        "description": "Altavoz inteligente con control por voz y alta calidad de sonido.",
+        "price": 99.99,
+        "thumbnail": "https://ejemplo.com/thumbnail20.jpg",
+        "code": "SPK021",
+        "stock": 200,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Zapatillas para correr AirRun",
+        "description": "Zapatillas deportivas para correr con amortiguación y diseño ergonómico.",
+        "price": 79.99,
+        "thumbnail": "https://ejemplo.com/thumbnail21.jpg",
+        "code": "SHO022",
+        "stock": 250,
+        "status": true,
+        "category": "Ropa"
+    },
+    {
+        "title": "Dispensador automático de comida para mascotas",
+        "description": "Dispensador automático con programación de horarios para alimentación de mascotas.",
+        "price": 59.99,
+        "thumbnail": "https://ejemplo.com/thumbnail22.jpg",
+        "code": "PET023",
+        "stock": 120,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Batería portátil PowerBoost",
+        "description": "Batería externa portátil con múltiples puertos de carga y capacidad de 20000mAh.",
+        "price": 49.99,
+        "thumbnail": "https://ejemplo.com/thumbnail23.jpg",
+        "code": "PWR024",
+        "stock": 180,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Mesa de comedor extensible",
+        "description": "Mesa de comedor extensible con diseño elegante y capacidad para 6 personas.",
+        "price": 299.99,
+        "thumbnail": "https://ejemplo.com/thumbnail24.jpg",
+        "code": "DIN025",
+        "stock": 90,
+        "status": true,
+        "category": "Muebles"
+    },
+    {
+        "title": "Cámara deportiva 4K",
+        "description": "Cámara deportiva 4K con estabilizador de imagen y resistente al agua.",
+        "price": 129.99,
+        "thumbnail": "https://ejemplo.com/thumbnail25.jpg",
+        "code": "CAM026",
+        "stock": 200,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Chaqueta impermeable para exteriores",
+        "description": "Chaqueta resistente al agua y viento para actividades al aire libre.",
+        "price": 89.99,
+        "thumbnail": "https://ejemplo.com/thumbnail26.jpg",
+        "code": "JKT027",
+        "stock": 150,
+        "status": true,
+        "category": "Ropa"
+    },
+    {
+        "title": "Robot aspirador y fregasuelos",
+        "description": "Robot inteligente con función de aspirado y fregado para limpieza eficiente.",
+        "price": 249.99,
+        "thumbnail": "https://ejemplo.com/thumbnail27.jpg",
+        "code": "ROB028",
+        "stock": 100,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Auriculares inalámbricos ProSound",
+        "description": "Auriculares inalámbricos con sonido envolvente y cancelación de ruido.",
+        "price": 119.99,
+        "thumbnail": "https://ejemplo.com/thumbnail28.jpg",
+        "code": "EAR029",
+        "stock": 200,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Smart TV 4K Samsung 55\"",
+        "description": "Televisor inteligente con resolución 4K y tecnología HDR para imágenes nítidas.",
+        "price": 899.99,
+        "thumbnail": "https://ejemplo.com/thumbnail1.jpg",
+        "code": "TV001",
+        "stock": 120,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "iPhone 13 Pro",
+        "description": "Último modelo de iPhone con cámara avanzada y rendimiento excepcional.",
+        "price": 1099.99,
+        "thumbnail": "https://ejemplo.com/thumbnail2.jpg",
+        "code": "PHN002",
+        "stock": 90,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Zapatos deportivos Nike Air Max",
+        "description": "Zapatillas cómodas con tecnología Air Max para una amortiguación superior.",
+        "price": 129.99,
+        "thumbnail": "https://ejemplo.com/thumbnail3.jpg",
+        "code": "SHO003",
+        "stock": 180,
+        "status": true,
+        "category": "Calzado"
+    },
+    {
+        "title": "Robot aspirador iRobot Roomba",
+        "description": "Aspiradora inteligente con navegación avanzada para una limpieza eficiente.",
+        "price": 349.99,
+        "thumbnail": "https://ejemplo.com/thumbnail4.jpg",
+        "code": "VCR004",
+        "stock": 50,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Cámara DSLR Canon EOS Rebel",
+        "description": "Cámara réflex digital con sensor de alta resolución y sistema autofocus rápido.",
+        "price": 799.99,
+        "thumbnail": "https://ejemplo.com/thumbnail5.jpg",
+        "code": "CAM005",
+        "stock": 65,
+        "status": true,
+        "category": "Fotografía"
+    },
+    {
+        "title": "Mesa de comedor extensible",
+        "description": "Mesa moderna extensible con capacidad para 8 personas.",
+        "price": 499.99,
+        "thumbnail": "https://ejemplo.com/thumbnail6.jpg",
+        "code": "FUR006",
+        "stock": 25,
+        "status": true,
+        "category": "Muebles"
+    },
+    {
+        "title": "Set de herramientas Stanley",
+        "description": "Kit completo de herramientas manuales para tareas domésticas.",
+        "price": 99.99,
+        "thumbnail": "https://ejemplo.com/thumbnail7.jpg",
+        "code": "TLS007",
+        "stock": 100,
+        "status": true,
+        "category": "Herramientas"
+    },
+    {
+        "title": "Bicicleta de montaña Schwinn",
+        "description": "Bicicleta todo terreno con cuadro de aluminio y suspensión delantera.",
+        "price": 449.99,
+        "thumbnail": "https://ejemplo.com/thumbnail8.jpg",
+        "code": "BIC008",
+        "stock": 40,
+        "status": true,
+        "category": "Deportes"
+    },
+    {
+        "title": "Funda para portátil",
+        "description": "Funda acolchada resistente al agua para portátiles de hasta 15.6 pulgadas.",
+        "price": 24.99,
+        "thumbnail": "https://ejemplo.com/thumbnail9.jpg",
+        "code": "CAS009",
+        "stock": 150,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Libro \"El Señor de los Anillos\"",
+        "description": "Edición especial de la famosa trilogía de J.R.R. Tolkien.",
+        "price": 39.99,
+        "thumbnail": "https://ejemplo.com/thumbnail10.jpg",
+        "code": "BK010",
+        "stock": 120,
+        "status": true,
+        "category": "Libros"
+    },
+    {
+        "title": "Silla de oficina ergonómica",
+        "description": "Silla giratoria con soporte lumbar ajustable y reposabrazos acolchados.",
+        "price": 199.99,
+        "thumbnail": "https://ejemplo.com/thumbnail11.jpg",
+        "code": "CHR011",
+        "stock": 60,
+        "status": true,
+        "category": "Muebles"
+    },
+    {
+        "title": "Collar de plata con colgante",
+        "description": "Collar elegante con colgante de diseño minimalista.",
+        "price": 49.99,
+        "thumbnail": "https://ejemplo.com/thumbnail12.jpg",
+        "code": "JWL012",
+        "stock": 200,
+        "status": true,
+        "category": "Joyería"
+    },
+    {
+        "title": "Zapatillas de running Adidas Ultraboost",
+        "description": "Zapatillas de alto rendimiento con amortiguación Boost para mayor comodidad.",
+        "price": 129.99,
+        "thumbnail": "https://ejemplo.com/thumbnail13.jpg",
+        "code": "SHO013",
+        "stock": 80,
+        "status": true,
+        "category": "Calzado"
+    },
+    {
+        "title": "Set de utensilios de cocina antiadherentes",
+        "description": "Set completo de utensilios de cocina resistentes al calor y antiadherentes.",
+        "price": 79.99,
+        "thumbnail": "https://ejemplo.com/thumbnail14.jpg",
+        "code": "KUT014",
+        "stock": 75,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Altavoz inteligente Amazon Echo",
+        "description": "Altavoz inteligente con asistente virtual Alexa para controlar dispositivos del hogar.",
+        "price": 89.99,
+        "thumbnail": "https://ejemplo.com/thumbnail15.jpg",
+        "code": "SPK015",
+        "stock": 100,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Pantalones vaqueros Levi's",
+        "description": "Pantalones vaqueros clásicos y duraderos de la reconocida marca Levi's.",
+        "price": 59.99,
+        "thumbnail": "https://ejemplo.com/thumbnail16.jpg",
+        "code": "JNS016",
+        "stock": 130,
+        "status": true,
+        "category": "Ropa"
+    },
+    {
+        "title": "Batería recargable externa",
+        "description": "Batería portátil de gran capacidad para cargar dispositivos móviles.",
+        "price": 34.99,
+        "thumbnail": "https://ejemplo.com/thumbnail17.jpg",
+        "code": "PWR017",
+        "stock": 180,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Maletín para portátil",
+        "description": "Maletín elegante y resistente para portátiles de hasta 13 pulgadas.",
+        "price": 29.99,
+        "thumbnail": "https://ejemplo.com/thumbnail18.jpg",
+        "code": "BAG018",
+        "stock": 300,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Juego de sartenes antiadherentes",
+        "description": "Set de sartenes resistentes y antiadherentes para una cocina eficiente.",
+        "price": 89.99,
+        "thumbnail": "https://ejemplo.com/thumbnail19.jpg",
+        "code": "PN020",
+        "stock": 90,
+        "status": true,
+        "category": "Hogar"
+    },
+    {
+        "title": "Altavoces Bluetooth portátiles",
+        "description": "Altavoces inalámbricos con gran calidad de sonido y batería de larga duración.",
+        "price": 69.99,
+        "thumbnail": "https://ejemplo.com/thumbnail20.jpg",
+        "code": "SPK021",
+        "stock": 250,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Silla ergonómica de oficina",
+        "description": "Silla giratoria ajustable con soporte lumbar y diseño ergonómico para comodidad.",
+        "price": 129.99,
+        "thumbnail": "https://ejemplo.com/thumbnail21.jpg",
+        "code": "CHR022",
+        "stock": 120,
+        "status": true,
+        "category": "Muebles"
+    },
+    {
+        "title": "Auriculares inalámbricos Sony",
+        "description": "Auriculares con cancelación de ruido y sonido de alta calidad.",
+        "price": 179.99,
+        "thumbnail": "https://ejemplo.com/thumbnail22.jpg",
+        "code": "HDR023",
+        "stock": 100,
+        "status": true,
+        "category": "Electrónicos"
+    },
+    {
+        "title": "Smartwatch FitPro",
+        "description": "Smartwatch resistente al agua con seguimiento de actividad y monitor de ritmo cardíaco.",
+        "price": 49.99,
+        "thumbnail": "https://ejemplo.com/thumbnail23.jpg",
+        "code": "WTCH024",
+        "stock": 400,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Set de herramientas Stanley",
+        "description": "Kit completo de herramientas manuales para tareas domésticas.",
+        "price": 99.99,
+        "thumbnail": "https://ejemplo.com/thumbnail24.jpg",
+        "code": "TLS025",
+        "stock": 100,
+        "status": true,
+        "category": "Herramientas"
+    },
+    {
+        "title": "Bicicleta de montaña Schwinn",
+        "description": "Bicicleta todo terreno con cuadro de aluminio y suspensión delantera.",
+        "price": 449.99,
+        "thumbnail": "https://ejemplo.com/thumbnail25.jpg",
+        "code": "BIC026",
+        "stock": 40,
+        "status": true,
+        "category": "Deportes"
+    },
+    {
+        "title": "Funda para portátil",
+        "description": "Funda acolchada resistente al agua para portátiles de hasta 15.6 pulgadas.",
+        "price": 24.99,
+        "thumbnail": "https://ejemplo.com/thumbnail26.jpg",
+        "code": "CAS027",
+        "stock": 150,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "title": "Libro \"El Señor de los Anillos\"",
+        "description": "Edición especial de la famosa trilogía de J.R.R. Tolkien.",
+        "price": 39.99,
+        "thumbnail": "https://ejemplo.com/thumbnail27.jpg",
+        "code": "BK028",
+        "stock": 120,
+        "status": true,
+        "category": "Libros"
+    },
+    {
+        "title": "Silla de oficina ergonómica",
+        "description": "Silla giratoria con soporte lumbar ajustable y reposabrazos acolchados.",
+        "price": 199.99,
+        "thumbnail": "https://ejemplo.com/thumbnail28.jpg",
+        "code": "CHR029",
+        "stock": 60,
+        "status": true,
+        "category": "Muebles"
+    }
+]

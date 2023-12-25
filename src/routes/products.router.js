@@ -1,9 +1,9 @@
 import { Router } from "express";
 import  __dirname  from "../utils.js"
-import ProductManager from "../ProductManager.js";
+import ProductManagerDB from "../dao/db/productManagerDb.js"
 
-const prodManager = new ProductManager(__dirname + "/files/productos.json");
 const productRouter = Router();
+const prodManager = new ProductManagerDB();
 
 productRouter.get("/", async (req, res) => {
     const limit = req.query.limit;
@@ -25,7 +25,7 @@ productRouter.get("/:pid", async (req, res) => {
     const pid = req.params.pid;
 
     try {
-        const producto = await prodManager.getProductsById(parseInt(pid));
+        const producto = await prodManager.getProductById(pid);
         if (producto) {
             res.json(producto);
         } else {
@@ -49,14 +49,14 @@ productRouter.post("/", async (req, res) => {
 });
 
 productRouter.put("/:pid", async (req, res) => {
-	const id = parseInt(req.params.pid);
+	const id = req.params.pid;
 	const update = req.body;
 	await prodManager.updateProduct(id, update);
 	res.send("Producto actualizado");
 });
 
 productRouter.delete("/:pid", async (req, res) => {
-	const id = parseInt(req.params.pid);
+	const id = req.params.pid;
 	await prodManager.deleteProduct(id);
 	res.send("Producto eliminado");
 });

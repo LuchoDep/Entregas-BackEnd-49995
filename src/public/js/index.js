@@ -7,20 +7,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const codeInput = document.getElementById('code');
     const stockInput = document.getElementById('stock');
     const descriptionInput = document.getElementById('description');
-    const imageInput = document.getElementById('image'); //placeholder, no integré multer
+    const thumbnailInput = document.getElementById('thumbnail'); //placeholder, no integré multer
     const productList = document.getElementById('products-list');
   
     const submitProductForm = (event) => {
         event.preventDefault();
 
-        const nombre = titleInput.value;
-        const precio = priceInput.value;
-        const codigo = codeInput.value;
+        const title = titleInput.value;
+        const price = priceInput.value;
+        const code = codeInput.value;
         const stock = stockInput.value;
-        const descripcion = descriptionInput.value;
-        const imagen = imageInput.value;
+        const description = descriptionInput.value;
+        const thumbnail = thumbnailInput.value;
   
-        socketClient.emit('addProduct', { nombre, descripcion, precio, imagen, codigo, stock }); 
+        socketClient.emit('addProduct', { title, description, price, thumbnail, code, stock }); 
         addProductForm.reset();
     };
 
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socketClient.on('newProduct', (productData) => {
         console.log('Nuevo producto agregado en tiempo real:', productData);
         const listItem = document.createElement('li');
-        listItem.textContent += `Nombre: ${productData.nombre}, Precio: ${productData.precio}, Código: ${productData.codigo}, Descripción: ${productData.descripcion}`;
+        listItem.textContent += `Nombre: ${productData.title}, Precio: ${productData.price}, Código: ${productData.code}, Descripción: ${productData.description}`;
         productList.appendChild(listItem);
     });
 });
