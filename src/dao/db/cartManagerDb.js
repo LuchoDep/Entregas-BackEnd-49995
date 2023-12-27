@@ -1,6 +1,7 @@
 import cartModel from "../models/carts.model.js";
 
 class CartManagerDb {
+
 	getCarts = async () => {
 		try {
 			const carts = await cartModel.find();
@@ -26,14 +27,20 @@ class CartManagerDb {
 	}
 
 	createCart = async () => {
+
 		try {
-			const cart = await cartModel.create();
-			return cart;
+			const cart = await cartModel.create({});
+			return {
+				status: "success",
+				message: "Carrito creado correctamente",
+				cart: cart
+			};
 		} catch (error) {
-			console.log({
+			return {
 				status: "error",
-				message: "No se pudo crear el carrito", error
-			});
+				message: "No se pudo crear el carrito",
+				error: error.message
+			};
 		}
 	}
 

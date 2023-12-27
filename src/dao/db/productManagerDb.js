@@ -3,8 +3,9 @@ import productModel from "../models/product.model.js";
 class ProductManagerDB {
 
 	async getProducts() {
+
 		const products = await productModel.find();
-		console.log(products);
+				
 		return products;
 	}
 
@@ -45,8 +46,8 @@ class ProductManagerDB {
 	}
 
 	async getProductById(id) {
-		try { 
-			const product = await productModel.findOne({ _id:id });
+		try {
+			const product = await productModel.findOne({ _id: id });
 			console.log(`Producto con ID ${id}:`, product);
 
 			return product;
@@ -60,7 +61,7 @@ class ProductManagerDB {
 
 	async deleteProduct(id) {
 		try {
-			const result = await productModel.deleteOne({ _id:id });
+			const result = await productModel.deleteOne({ _id: id });
 
 			if (result.deletedCount > 0) {
 				console.log(`Producto con ID ${id} eliminado.`);
@@ -77,7 +78,7 @@ class ProductManagerDB {
 
 	async updateProduct(id, updatedProduct) {
 		try {
-			const result = await productModel.updateOne({ _id:id }, { $set: updatedProduct });
+			const result = await productModel.updateOne({ _id: id }, { $set: updatedProduct });
 
 			if (result.nModified > 0) {
 				console.log(`Producto con ID ${id} actualizado.`);
