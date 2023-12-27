@@ -38,17 +38,20 @@ cartRouter.post("/", async (req, res) => {
 });
 
 cartRouter.post('/:cid/product/:pid', async (req, res) => {
-
 	const cid = req.params.cid;
 	const pid = req.params.pid;
-	const quantity = req.body.quantity
+	const stock = req.body.stock;
 
-	const cart = await manager.addProductInCart(pid, cid, quantity)
+	try {
+		const cart = await manager.addProductInCart(pid, cid, stock);
 
-	res.send({
-		status: "succes",
-		message: cart
-	})
+		res.status(200).json({
+			status: "success",
+			message: `Producto ${pid} agregado al carrito ${cid}`
+		});
+	} catch (error) {
+		res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+	}
 });
 
 cartRouter.delete("/:cid", async (req, res) => {
@@ -75,7 +78,7 @@ cartRouter.delete("/:cid/products/:pid", async (req, res) => {
 
 	try {
 
-		if (quantity <= 0) {
+		if (stock <= 0) {
 			return res
 				.status(400)
 				.json({ error: "La cantidad debe ser mayor a 0" });
@@ -95,7 +98,7 @@ cartRouter.delete("/:cid/products/:pid", async (req, res) => {
 		res.json({
 			message: "Producto eliminado del carrito",
 			productId: pid,
-			cartId: cid,
+			cid: cid,
 		});
 
 	} catch (error) {
@@ -106,10 +109,10 @@ cartRouter.delete("/:cid/products/:pid", async (req, res) => {
 
 cartRouter.put("/:cid", async (req, res) => {
 	try {
-		const cartId = req.params.cid;
+		const cid = req.params.cid;
 		const updatedCartData = req.body;
 
-		const cart = await manager.getCartById(cartId);
+		const cart = await manager.getCartById(cid);
 
 		if (!cart) {
 			return res.status(404).json({ error: "No se encontró el carrito" });
@@ -128,31 +131,31 @@ cartRouter.put("/:cid", async (req, res) => {
 })
 
 cartRouter.put("/:cid/products/:pid", async (req, res) => {
-    const cid = req.params.cid;
-    const pid = req.params.pid;
-    const quantity = req.body.quantity;
+	const cid = req.params.cid;
+	const pid = req.params.pid;
+	const stock = req.body.stock;
 
-    const cart = await manager.getCartById(cid);
-    console.log("Cart:", cart);
+	const cart = await manager.getCartById(cid);
+	console.log("Cart:", cart);
 
-    if (!cart) {
-        return res.status(404).json({ error: "Cart not found" });
-    }
-    console.log(cart);
+	if (!cart) {
+		return res.status(404).json({ error: "Cart not found" });
+	}
+	console.log(cart);
 
-    const product = await productManager.getProductById(pid);
-    if (!product) {
-        return res.status(404).json({ error: "Product not found" });
-    }
-    console.log();
+	const product = await productManager.getProductById(pid);
+	if (!product) {
+		return res.status(404).json({ error: "Product not found" });
+	}
+	console.log();
 
-    await manager.updateProductQuantity(cid, pid, quantity);
-    console.log(quantity);
-    res.json({
-        message: "Se modificó la cantidad del producto",
-        productId: pid,
-        cartId: cid,
-    })
+	await manager.updateProductstock(cid, pid, stock);
+	console.log(stock);
+	res.json({
+		message: "Se modificó la cantidad del producto",
+		productId: pid,
+		cid: cid,
+	})
 })
 
 

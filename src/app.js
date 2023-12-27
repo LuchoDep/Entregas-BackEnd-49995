@@ -59,8 +59,7 @@ socketServer.on("connection", (socket) => {
             console.log('Datos del producto recibidos en el servidor:', productData);
 
             await productManager.getProducts();
-            await productManager.addProduct(productData.title, productData.description, productData.price, productData.image, productData.code, productData.stock);
-            // await productManager.addProduct({});
+            await productManager.addProduct({});
 
             socketServer.emit('newProduct', productData);
         } catch (error) {

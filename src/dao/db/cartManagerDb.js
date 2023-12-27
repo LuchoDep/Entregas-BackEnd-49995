@@ -1,16 +1,15 @@
 import cartModel from "../models/carts.model.js";
+import productModel from "../models/product.model.js";
 
 class CartManagerDb {
 
 	getCarts = async () => {
+
 		try {
 			const carts = await cartModel.find();
 			return carts;
 		} catch (error) {
-			console.log({
-				status: "error",
-				message: "Error al encontrar los carritos", error
-			});
+			throw new Error("Error al encontrar los carritos: " + error.message);
 		}
 	}
 
@@ -23,7 +22,6 @@ class CartManagerDb {
 		} else {
 			return cart;
 		}
-
 	}
 
 	createCart = async () => {
@@ -61,56 +59,55 @@ class CartManagerDb {
 		}
 	}
 
-	addProductInCart = async (cid, pid, quantity) => {
-		const cart = await cartsModel.findOne({ _id: cid });
-		if (!cart) {
-			return {
-				status: "error",
-				message: `El carrito con el id ${cid} no existe`
+	addProductInCart = async (cid, pid, stock) => {
+		try {
+			const cart = await cartModel.findById(cid);
+			if (!cart) {
+				throw new Error(`El carrito con el ID ${cid} no existe`);
 			}
-		};
-		const product = await productsModel.findOne({ _id: pid });
-		if (!product) {
-			return {
-				status: "error",
-				message: `El producto con el id ${pid} no existe`
-			}
-		};
-		let productsInCart = cart.product;
+	
+			const product = await productModel.findById(pid);
 
-		const indexProduct = productsInCart.findIndex((product) => product.product == pid);
-
-		if (indexProduct == -1) {
-			const newProduct = {
-				product: pid,
-				quantity: quantity
+			if (!product) {
+				throw new Error(`El producto con el ID ${pid} no existe`);
 			}
-			cart.product.push(newProduct);
-		} else {
-			cart.product[indexProduct].quantity += quantity;
+	
+			const productExistsInCart = cart.products.some(prod => prod.product === pid);
+
+			if (!productExistsInCart) {
+				const newProduct = {
+					product: pid,
+					stock: stock
+				};
+				cart.products.push(newProduct);
+			} else {
+				const existingProduct = cart.products.find(prod => prod.product === pid);
+				existingProduct.stock += stock;
+	
+				if (existingProduct.stock <= 0) {
+					cart.products = cart.products.filter(prod => prod.product !== pid);
+				}
+			}
+	
+			await cart.save();
+			return cart;
+		} catch (error) {
+			throw new Error(`Error al agregar el producto al carrito: ${error.message}`);
 		}
-
-		await cart.save();
-
-		return cart;
-
 	}
 
 	deleteCart = async (cid) => {
 		try {
 			const result = await cartModel.deleteOne({ _id: cid });
 
-			if (result.deletedCount > 0) {
-				console.log(`Carrito con ID ${cid} eliminado exitosamente`);
-				return true;
-			} else {
-				console.log({
-					status: "error",
-					message: "No se pudo eli el carrito", error
-				});
+			if (result.deletedCount === 0) {
+				throw new Error(`Carrito con ID ${cid} no encontrado`);
 			}
+
+			console.log(`Carrito con ID ${cid} eliminado exitosamente`);
+			return true;
 		} catch (error) {
-			console.error(`Error al eliminar el carrito con ID ${cartId}: ${error.message}`);
+			throw new Error(`Error al eliminar el carrito con ID ${cid}: ${error.message}`);
 		}
 	}
 
@@ -120,31 +117,22 @@ class CartManagerDb {
 			const cart = await cartModel.findOne({ _id: cid });
 
 			if (!cart) {
-				return {
-					status: "error",
-					message: `El carrito con el ID ${cid} no existe`
-				};
+				throw new Error(`El carrito con el ID ${cid} no existe`);
 			}
 
-			cart.products = cart.products.filter(product => product.product !== pid);
+			cart.products = cart.products.filter(product => product.product.toString() !== pid.toString());
 
 			await cart.save();
-
 			return {
 				status: "success",
 				message: `Producto con el ID ${pid} eliminado del carrito.`
 			};
 		} catch (error) {
-			console.error(`Error al eliminar el producto del carrito: ${error}`);
-			return {
-				status: "error",
-				message: "Error al eliminar el producto del carrito",
-				error: error
-			};
+			throw new Error(`Error al eliminar el producto del carrito: ${error.message}`);
 		}
 	}
 
-	updateProductQuantity = async (cid, pid, quantity) => {
+	updateProductstock = async (cid, pid, stock) => {
 		try {
 			const cart = await cartModel.findOne({ _id: cid });
 
@@ -164,7 +152,7 @@ class CartManagerDb {
 				};
 			}
 
-			productToUpdate.quantity = quantity;
+			productToUpdate.stock = stock;
 			await cart.save();
 
 			return {
