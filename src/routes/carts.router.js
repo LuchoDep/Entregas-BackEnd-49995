@@ -1,5 +1,6 @@
 import { Router } from "express";
 import CartManagerDb from "../dao/db/cartManagerDb.js";
+import cartModel from "../dao/models/carts.model.js";
 
 const cartRouter = Router()
 const manager = new CartManagerDb();
@@ -11,14 +12,31 @@ cartRouter.get('/', async (req, res) => {
 
 });
 
+// cartRouter.get('/:cid', async (req, res) => {
+
+// 	const cid = req.params.cid;
+
+// 	try {
+// 		const products = await manager.getProductsInCart(cid);
+// 		res.json(products);
+// 	} catch (error) {
+// 		res.status(500).json({ error });
+// 	}
+
+// });
+
 cartRouter.get('/:cid', async (req, res) => {
 
-	const cid = req.params.cid;
-
 	try {
-		const products = await manager.getProductsInCart(cid);
-		res.json(products);
+		const cart = await cartModel
+		.findOne({ _id: req.params.cid })
+		.populate('products.product')
+		.lean();
+
+	console.log(cart);
+	res.render('cart', { cart });
 	} catch (error) {
+		console.error("Error al actualizar el carrito:", error);
 		res.status(500).json({ error });
 	}
 
@@ -38,20 +56,24 @@ cartRouter.post("/", async (req, res) => {
 });
 
 cartRouter.post('/:cid/product/:pid', async (req, res) => {
-	const cid = req.params.cid;
-	const pid = req.params.pid;
-	const stock = req.body.stock;
 
-	try {
-		const cart = await manager.addProductInCart(pid, cid, stock);
+	const cart = await cartModel.findOne({ _id: req.params.cid });
+	const oldProduct = cart.products.find(
+		({ product }) => product.toString() === req.params.pid
+	);
 
-		res.status(200).json({
-			status: "success",
-			message: `Producto ${pid} agregado al carrito ${cid}`
+	if (oldProduct) {
+		oldProduct.quantity += 1;
+	} else {
+		cart.products.push({
+			product: req.params.pid,
+			quantity: 1,
 		});
-	} catch (error) {
-		res.status(500).json({ error: 'Error al agregar el producto al carrito' });
 	}
+
+	const update = await cartModel.updateOne({ _id: req.params.cid }, cart);
+
+	res.send(update);
 });
 
 cartRouter.delete("/:cid", async (req, res) => {
@@ -129,6 +151,8 @@ cartRouter.put("/:cid", async (req, res) => {
 		res.status(500).json({ error });
 	}
 })
+
+
 
 cartRouter.put("/:cid/products/:pid", async (req, res) => {
 	const cid = req.params.cid;
