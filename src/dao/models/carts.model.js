@@ -13,7 +13,7 @@ const cartSchema = new mongoose.Schema({
             quantity: {
                 type: Number,
                 default: 1,
-                require: true
+                required: true
             }
         },
     ],
@@ -22,6 +22,8 @@ const cartSchema = new mongoose.Schema({
 cartSchema.pre("find", function(){
     this.populate("products.product");
 });
+
+cartSchema.index({ 'products.quantity': 1 });
 
 const cartModel = mongoose.model(collection, cartSchema);
 
