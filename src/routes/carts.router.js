@@ -188,13 +188,13 @@ cartRouter.put("/:cid/product/:pid", async (req, res) => {
 	console.log("Cart:", cart);
 
 	if (!cart) {
-		return res.status(404).json({ error: "Cart not found" });
+		return res.status(404).json({ error: "Carrito no encontrado" });
 	}
 	console.log(cart);
 
 	const product = await productManager.getProductById(pid);
 	if (!product) {
-		return res.status(404).json({ error: "Product not found" });
+		return res.status(404).json({ error: "Producto no encontrado" });
 	}
 	console.log();
 
