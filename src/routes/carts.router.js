@@ -178,35 +178,6 @@ cartRouter.put("/:cid", async (req, res) => {
 });
 
 
-
-cartRouter.put("/:cid/product/:pid", async (req, res) => {
-	const cid = req.params.cid;
-	const pid = req.params.pid;
-	const quantity = req.body.quantity;
-
-	const cart = await manager.getCartById(cid);
-	console.log("Cart:", cart);
-
-	if (!cart) {
-		return res.status(404).json({ error: "Carrito no encontrado" });
-	}
-	console.log(cart);
-
-	const product = await productManager.getProductById(pid);
-	if (!product) {
-		return res.status(404).json({ error: "Producto no encontrado" });
-	}
-	console.log();
-
-	await manager.addProductInCart(cid, pid, quantity);
-	console.log(quantity);
-	res.json({
-		message: "Se modificó la cantidad del producto",
-		productId: pid,
-		cid: cid,
-	})
-})
-
 cartRouter.put("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
