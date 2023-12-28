@@ -2,11 +2,33 @@ import productModel from "../models/product.model.js";
 
 class ProductManagerDB {
 
-	async getProducts() {
+	async getProducts(query, sort, options, category) {
 
-		const products = await productModel.find();
+		try {
+			let filter = {};
 
-		return products;
+			if (query) {
+				filter.$or = [
+					{ title: { $regex: new RegExp(query, 'i') } },
+					{ description: { $regex: new RegExp(query, 'i') } },
+					{ $text: { $search: query } },
+				];
+			};
+
+			if (category) {
+				filter.category = category;
+			};
+
+			const sort = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
+
+			const paginate = await productModel.paginate(filter, { ...options, sort: sort });
+
+			return paginate;
+
+		} catch (error) {
+			console.log("Error al obtener productos")
+			throw new Error;
+		}
 	}
 
 	async addProduct(
@@ -57,7 +79,8 @@ class ProductManagerDB {
 
 	async deleteProduct(pid) {
 		try {
-			const result = await productModel.deleteOne({ _id: pid });
+			const result = await productModel.deleteOne({ pid });
+
 			if (result.deletedCount > 0) {
 				console.log(`Producto con ID ${pid} eliminado exitosamente`);
 			} else {
@@ -70,8 +93,8 @@ class ProductManagerDB {
 
 	async updateProduct(pid, updatedProduct) {
 		try {
-			const result = await productModel.updateOne({ _id: pid }, { $set: updatedProduct });
-			if (result.nModified > 0) {
+			const result = await productModel.updateOne({ pid }, { $set: updatedProduct });
+			if (result.modifDocs > 0) {
 				console.log(`Producto con ID ${pid} actualizado`);
 			} else {
 				console.log(`No se encontró el producto con ID ${pid}`);

@@ -39,6 +39,7 @@ const productSchema = new mongoose.Schema({
 });
 
 productSchema.plugin(mongoosePaginate);
+productSchema.index({ title: 'text', description: 'text', price: 'text' });
 
 const productModel = mongoose.model(productCollection, productSchema);
 

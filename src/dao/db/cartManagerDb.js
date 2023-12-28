@@ -59,7 +59,7 @@ class CartManagerDb {
 		}
 	}
 
-	addProductInCart = async (cid, pid, stock) => {
+	addProductInCart = async (cid, pid, quantity) => {
 		try {
 			const cart = await cartModel.findById(cid);
 			if (!cart) {
@@ -77,14 +77,14 @@ class CartManagerDb {
 			if (!productExistsInCart) {
 				const newProduct = {
 					product: pid,
-					stock: stock
+					quantity: quantity
 				};
 				cart.products.push(newProduct);
 			} else {
 				const existingProduct = cart.products.find(prod => prod.product === pid);
-				existingProduct.stock += stock;
+				existingProduct.quantity += quantity;
 	
-				if (existingProduct.stock <= 0) {
+				if (existingProduct.quantity <= 0) {
 					cart.products = cart.products.filter(prod => prod.product !== pid);
 				}
 			}
@@ -132,40 +132,39 @@ class CartManagerDb {
 		}
 	}
 
-	updateProductstock = async (cid, pid, stock) => {
+	updateProductQuantity = async (cid, pid, quantity) => {
+
 		try {
-			const cart = await cartModel.findOne({ _id: cid });
+
+			const cart = await cartModel.findById(cid);
 
 			if (!cart) {
-				return {
-					status: "error",
-					message: `El carrito con el ID ${cid} no existe`
-				};
+
+				throw new Error(`El carrito con el ID ${cid} no existe`);
 			}
+	
+			const productIndex = cart.products.findIndex(prod => prod.product.toString() === pid);
 
-			const productToUpdate = cart.products.find(product => product.product === pid);
+			if (productIndex === -1) {
 
-			if (!productToUpdate) {
-				return {
-					status: "error",
-					message: `El producto con el ID ${pid} no existe en el carrito`
-				};
+				throw new Error(`El producto con el ID ${pid} no está en el carrito`);
 			}
+	
+			cart.products[productIndex].quantity = quantity;
 
-			productToUpdate.stock = stock;
+			if (quantity <= 0) {
+
+				cart.products.splice(productIndex, 1);
+			}
+	
 			await cart.save();
 
-			return {
-				status: "success",
-				message: `Cantidad del producto con el ID ${pid} actualizada en el carrito con el ID ${cid}`
-			};
+			return cart;
+
 		} catch (error) {
-			console.error(`Error al actualizar la cantidad del producto en el carrito: ${error}`);
-			return {
-				status: "error",
-				message: "Error al actualizar la cantidad del producto en el carrito",
-				error: error
-			};
+
+			throw new Error(`Error al actualizar la cantidad del producto en el carrito: ${error.message}`);
+			
 		}
 	}
 
