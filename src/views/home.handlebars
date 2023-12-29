@@ -1,18 +1,43 @@
 <h1>Lista de Productos</h1>
 
 {{#each products}}
-
 <div class="product">
     <h3>{{this.title}}</h3>
     <p>{{this.description}}</p>
     <p>Precio: ${{this.price}}</p>
-</div>
 
-<form id="productForm">
-    <label for="stock">Cantidad:</label>
-    <input type="number" id="stock" name="stock" min="1" value="1">
-    <button id="addToCart" type="button">Agregar al carrito</button>
-</form>
+    <form onsubmit="addToCart('{{this._id}}'); return false;">
+        <label for="stock">Cantidad:</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1">
+        <button type="submit">Agregar al carrito</button>
+    </form>
+</div>
 {{/each}}
 
-<script src="/js/home.js"></script>
+<script>
+    async function addToCart(pid) {
+        const quantityInput = document.getElementById('quantity');
+        const quantity = parseInt(quantityInput.value) || 1;
+
+        try {
+            const response = await fetch(`/api/cart/${pid}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ stock })
+            });
+
+            if (response.ok) {
+                alert('Producto agregado al carrito correctamente');
+            } else {
+                alert('Error al agregar el producto al carrito');
+            }
+        } catch (error) {
+            console.error('Error al agregar el producto al carrito:', error);
+            alert('Error al agregar el producto al carrito');
+        }
+    }
+</script>
+
+{{!-- <script src="/js/home.js"></script> --}}

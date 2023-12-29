@@ -1,14 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('productForm');
-    const addToCartBtn = document.getElementById('addToCart');
+    const addToCart = document.getElementById('addToCart');
 
-    addToCartBtn.addEventListener('click', async (event) => {
+    addToCart.addEventListener('click', async (event) => {
         event.preventDefault();
 
-        const stockInput = document.getElementById('stock');
-        const stock = parseInt(stockInput.value) || 1;
-        const pid = `${pid}`;
-        const cid = `${cid}`; 
+        const quantityInput = document.getElementById('stock');
+        const quantity = parseInt(quantityInput.value) || 1;
+        const pid = document.getElementById('pid').value;
+        const cid = document.getElementById('cid').value;
+         
 
         try {
             const response = await fetch(`/api/cart/${cid}/product/${pid}`, {
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ stock })
+                body: JSON.stringify({ quantity })
             });
 
             if (response.ok) {
