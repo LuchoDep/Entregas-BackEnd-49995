@@ -7,14 +7,17 @@ const productSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
+        index: true,
     },
     description: {
         type: String,
         required: true,
+        index: true,
     },
     price: {
         type: Number,
         required: true,
+        index: true,
     },
     thumbnail: {
         type: String,
@@ -35,11 +38,12 @@ const productSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
+        index: true,
     },
 });
 
 productSchema.plugin(mongoosePaginate);
-productSchema.index({ title: 'text', description: 'text', price: 'text' });
+productSchema.index({ title: 'text', description: 'text', category: 'text' });
 
 const productModel = mongoose.model(productCollection, productSchema);
 

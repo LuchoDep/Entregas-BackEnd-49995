@@ -7,7 +7,6 @@ const productRouter = Router();
 const prodManager = new ProductManagerDB();
 
 productRouter.get('/', async (req, res) => {
-    
     try {
         const { limit, page, sort, query } = req.query;
 
@@ -16,7 +15,7 @@ productRouter.get('/', async (req, res) => {
             desc: { price: -1 },
         };
 
-        const modelQuery = query ? JSON.parse(query) : {};
+        const modelQuery = query ? { $text: { $search: query } } : {};
         const modelLimit = limit ? parseInt(limit, 10) : 10;
         const modelPage = page ? parseInt(page, 10) : 1;
         const modelSort = sort ? sortObjectMapper[sort] : undefined;
