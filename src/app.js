@@ -34,26 +34,6 @@ app.use("/api/carts", cartRouter)
 
 socketServer.on("connection", (socket) => {
 
-    try {
-
-        console.log("Nuevo cliente conectado con ID:", socket.id);
-
-        socket.on('sendMessage', async (data) => {
-
-            try {
-                const newMessage = await messageModel.create({ user: data.user, message: data.message });
-                console.log('Nuevo mensaje guardado en la base de datos:', newMessage);
-
-                io.emit('newMessage', { user: data.user, message: data.message });
-            } catch (error) {
-                console.error('Error al guardar el mensaje en la base de datos:', error.message);
-            }
-        });
-
-    } catch (error) {
-        console.error('Error en la conexión de socket:', error.message);
-    }
-
     socket.on('addProduct', async (productData) => {
         try {
             console.log('Datos del producto recibidos en el servidor:', productData);
