@@ -8,22 +8,27 @@ const prodManager = new ProductManagerDB();
 
 productRouter.get('/', async (req, res) => {
     try {
-        const { limit, page, sort, query } = req.query;
+        const { limit, page, sort, query, category } = req.query;
 
         const sortObjectMapper = {
             asc: { price: 1 },
             desc: { price: -1 },
         };
 
+        const sortOption = sort ? sortObjectMapper[sort] : undefined;
+
         const modelQuery = query ? { $text: { $search: query } } : {};
+        if (category) {
+            modelQuery.category = category;
+        }
+
         const modelLimit = limit ? parseInt(limit, 10) : 10;
         const modelPage = page ? parseInt(page, 10) : 1;
-        const modelSort = sort ? sortObjectMapper[sort] : undefined;
 
         const products = await productModel.paginate(modelQuery, {
             limit: modelLimit,
             page: modelPage,
-            sort: modelSort,
+            sort: sortOption,
         });
 
         const response = {
@@ -36,8 +41,6 @@ productRouter.get('/', async (req, res) => {
             pagingCounter: products.pagingCounter,
             hasPrevPage: products.hasPrevPage,
             hasNextPage: products.hasNextPage,
-            prevPage: products.prevPage,
-            nextPage: products.nextPage,
         };
 
         if (products.hasPrevPage) {

@@ -2,24 +2,24 @@ import productModel from "../models/product.model.js";
 
 class ProductManagerDB {
 
-	async getProducts(query, sort, options, category) {
+	async getProducts(query, sortOrder, options, category) {
 
-		try {
-			let filter = {};
-
-			if (query) {
+			try {
+			  let filter = {};
+		
+			  if (query) {
 				filter.$or = [
-					{ title: { $regex: new RegExp(query, 'i') } },
-					{ description: { $regex: new RegExp(query, 'i') } },
-					{ $text: { $search: query } },
+				  { title: { $regex: new RegExp(query, 'i') } },
+				  { description: { $regex: new RegExp(query, 'i') } },
+				  { $text: { $search: query } },
 				];
-			};
-
-			if (category) {
+			  }
+		
+			  if (category) {
 				filter.category = category;
-			};
-
-			const sort = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
+			  }
+		
+			  const sortOption = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
 
 			const paginate = await productModel.paginate(filter, { ...options, sort: sort });
 
