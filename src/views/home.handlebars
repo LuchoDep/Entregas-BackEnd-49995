@@ -1,43 +1,38 @@
-<h1>Lista de Productos</h1>
+<h1>Lista de productos</h1>
+<div class="container">
+    <div class="row">
+        {{#each products.docs}}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="{{thumbnail}}" alt="{{title}}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">{{title}}</h5>
+                    <p class="card-text">{{description}}</p>
+                    <p class="card-text">Precio: ${{price}}</p>
+                    <form action="" method="">
+                        {{!-- <input type="hidden" name="product" value="{{_id}}">
+                        <input type="hidden" name="quantity" value="1"> --}}
+                        <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        <div class="row">
+            <div class="col-sm-4">
+                {{#if products.hasPrevPage}}
+                <a href="{{products.prevPage}}" class="btn btn-primary">&laquo; Página Anterior</a>
+                {{/if}}
+            </div>
+            <div class="col-sm-4 text-center">
+                Página {{products.page}} de {{products.totalPages}}
+            </div>
+            <div class="col-sm-4 text-right">
+                {{#if products.hasNextPage}}
+                <a href="{{products.nextPage}}" class="btn btn-primary">Página Siguiente &raquo;</a>
+                {{/if}}
+            </div>
+        </div>
 
-{{#each products}}
-<div class="product">
-    <h3>{{this.title}}</h3>
-    <p>{{this.description}}</p>
-    <p>Precio: ${{this.price}}</p>
-
-    <form onsubmit="addToCart('{{this._id}}'); return false;">
-        <label for="stock">Cantidad:</label>
-        <input type="number" id="quantity" name="quantity" min="1" value="1">
-        <button type="submit">Agregar al carrito</button>
-    </form>
+    </div>
 </div>
-{{/each}}
-
-<script>
-    async function addToCart(pid) {
-        const quantityInput = document.getElementById('quantity');
-        const quantity = parseInt(quantityInput.value) || 1;
-
-        try {
-            const response = await fetch(`/api/cart/${pid}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ stock })
-            });
-
-            if (response.ok) {
-                alert('Producto agregado al carrito correctamente');
-            } else {
-                alert('Error al agregar el producto al carrito');
-            }
-        } catch (error) {
-            console.error('Error al agregar el producto al carrito:', error);
-            alert('Error al agregar el producto al carrito');
-        }
-    }
-</script>
-
-{{!-- <script src="/js/home.js"></script> --}}

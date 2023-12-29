@@ -24,8 +24,8 @@
 <div id="list-products">
     <h2>Lista de Productos</h2>
     <ul id="products-list">
-        {{#each products}}
-        <li>Nombre: {{this.title}}, Precio: {{this.price}}, Código: {{this.code}}, Descripción: {{this.description}}
+        {{#each products.docs}}
+        <li>Nombre: {{title}}, Precio: {{price}}, Código: {{code}}, Descripción: {{description}}
         </li>
         {{/each}}
     </ul>

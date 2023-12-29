@@ -4,22 +4,22 @@ class ProductManagerDB {
 
 	async getProducts(query, sortOrder, options, category) {
 
-			try {
-			  let filter = {};
-		
-			  if (query) {
+		try {
+			let filter = {};
+
+			if (query) {
 				filter.$or = [
-				  { title: { $regex: new RegExp(query, 'i') } },
-				  { description: { $regex: new RegExp(query, 'i') } },
-				  { $text: { $search: query } },
+					{ title: { $regex: new RegExp(query, 'i') } },
+					{ description: { $regex: new RegExp(query, 'i') } },
+					{ $text: { $search: query } },
 				];
-			  }
-		
-			  if (category) {
+			}
+
+			if (category) {
 				filter.category = category;
-			  }
-		
-			  const sortOption = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
+			}
+
+			const sortOption = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
 
 			const paginate = await productModel.paginate(filter, { ...options, sort: sort });
 
@@ -27,7 +27,6 @@ class ProductManagerDB {
 
 		} catch (error) {
 			console.log("Error al obtener productos")
-			throw new Error;
 		}
 	}
 

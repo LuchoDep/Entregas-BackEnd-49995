@@ -31,6 +31,10 @@ productRouter.get('/', async (req, res) => {
             sort: sortOption,
         });
 
+        if (products.docs.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron resultados' });
+        }
+
         const response = {
             status: 'success',
             payload: products.docs,
