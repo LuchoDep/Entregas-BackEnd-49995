@@ -1,13 +1,19 @@
 import express from "express";
 import handlebars from "express-handlebars";
+import session from "express-session";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
+import passport from "passport";
 import __dirname from "./utils.js"
 import ProductManagerDB from "./dao/db/productManagerDb.js";
 import productRouter from "./routes/products.router.js";
 import cartRouter from "./routes/carts.router.js";
+import sessionRouter from "./routes/sessions.router.js"
 import viewsRouter from "./routes/views.router.js";
 import messageModel from "./dao/models/message.model.js";
+import inicializePassport from "./config/passport.config.js";
+
 
 const app = express();
 const PORT = 8080;
@@ -28,15 +34,28 @@ app.engine("handlebars", handlebars.engine({
 }));
 app.set("views", "./src/views");
 app.set("view engine", "handlebars");
-app.use(express.static(__dirname + "/public"))
+app.use(express.static(__dirname + "/public"));
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(session({
+    store: new MongoStore({
+        mongoUrl: MONGO,
+    }),
+    secret: "CoderSecret",
+    resave: false,
+    saveUninitialized: false
+}));
+
+inicializePassport()
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(`/`, viewsRouter);
-app.use("/api/products", productRouter)
-app.use("/api/carts", cartRouter)
-
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
+app.use('/api/sessions', sessionRouter);
 
 socketServer.on("connection", (socket) => {
 
@@ -56,17 +75,17 @@ socketServer.on("connection", (socket) => {
     socket.on('message', async (data) => {
         try {
             const nuevoMensaje = await messageModel.create(data);
-            
+
             if (!nuevoMensaje) {
                 throw new Error('No se pudo crear el mensaje');
             }
-    
+
             const datosNuevoMensaje = await messageModel.findById(nuevoMensaje._id).lean();
-    
+
             if (!datosNuevoMensaje) {
                 throw new Error('No se encontró el mensaje recién creado');
             }
-    
+
             socketServer.emit('newMessage', datosNuevoMensaje);
         } catch (error) {
             console.error("Se produjo un error al procesar el mensaje:", error);
