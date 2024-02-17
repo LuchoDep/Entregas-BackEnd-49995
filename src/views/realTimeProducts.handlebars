@@ -1,4 +1,5 @@
 <h1>Agregar Nuevo Producto</h1>
+
 <form id="addProductForm">
     <label for="title">Título:</label>
     <input type="text" id="title" name="title" required>
@@ -15,6 +16,9 @@
     <label for="description">Descripción:</label>
     <input type="text" id="description" name="description">
 
+    <label for="category">Categoría:</label>
+    <input type="text" id="category" name="category">
+
     <label for="image">Imagen:</label>
     <input type="text" id="image" name="image" required>
 
@@ -29,7 +33,23 @@
         </li>
         {{/each}}
     </ul>
+    <div class="row">
+        <div class="col-sm-4">
+            {{#if products.hasPrevPage}}
+            <a href="http://localhost:8080/?page={{products.prevPage}}" class="btn btn-primary">&laquo;
+                Página Anterior</a>
+            {{/if}}
+        </div>
+        <div class="col-sm-4 text-center">
+            Página {{products.page}} de {{products.totalPages}}
+        </div>
+        <div class="col-sm-4 text-right">
+            {{#if products.hasNextPage}}
+            <a href="http://localhost:8080/?page={{products.nextPage}}" class="btn btn-primary">Página
+                Siguiente &raquo;</a>
+            {{/if}}
+        </div>
+    </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>

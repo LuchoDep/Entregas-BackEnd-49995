@@ -46,6 +46,8 @@ router.get('/products', privateAccess, async (req, res) => {
             sort: sortOption,
         });
 
+        console.log(products)
+
         if (products.docs.length === 0) {
             return res.status(404).json({ error: 'No se encontraron resultados' });
         };
@@ -83,30 +85,14 @@ router.get('/', privateAccess, async (req, res) => {
             sort: sortOption,
         });
 
+        console.log(products)
+
+
         if (products.docs.length === 0) {
             return res.status(404).json({ error: 'No se encontraron resultados' });
-        }
-
-        const response = {
-            status: 'success',
-            payload: products.docs,
-            totalDocs: products.totalDocs,
-            limit: products.limit,
-            totalPages: products.totalPages,
-            page: products.page,
-            pagingCounter: products.pagingCounter,
-            hasPrevPage: products.hasPrevPage,
-            hasNextPage: products.hasNextPage,
         };
 
-        if (products.hasPrevPage) {
-            response.prevPage = `${req.protocol}://${req.get('host')}${req.baseUrl}?limit=${modelLimit}&page=${products.prevPage}`;
-        }
-        if (products.hasNextPage) {
-            response.nextPage = `${req.protocol}://${req.get('host')}${req.baseUrl}?limit=${modelLimit}&page=${products.nextPage}`;
-        }
-
-        res.render("home", { products, user: req.session.user })
+        res.render("realTimeProducts", { products, user: req.session.user })
 
     } catch (error) {
         res.status(500).json({ status: 'error', message: 'Hubo un problema al obtener los productos' });
