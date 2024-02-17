@@ -1,4 +1,3 @@
-// views.controller.js
 import productModel from "../dao/models/product.model.js";
 import { productDao } from "../dao/index.js";
 
