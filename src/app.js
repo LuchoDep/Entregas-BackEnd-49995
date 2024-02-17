@@ -5,26 +5,25 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import __dirname from "./utils.js"
-import ProductManagerDB from "./dao/db/productManagerDb.js";
-import productRouter from "./routes/products.router.js";
-import cartRouter from "./routes/carts.router.js";
-import sessionRouter from "./routes/sessions.router.js"
-import viewsRouter from "./routes/views.router.js";
-import messageModel from "./dao/models/message.model.js";
 import inicializePassport from "./config/passport.config.js";
+import __dirname from "./utils.js"
+
+import productRouter from "./routes/products.routes.js";
+import cartRouter from "./routes/carts.routes.js";
+import sessionRouter from "./routes/sessions.routes.js"
+import viewsRouter from "./routes/views.routes.js";
+import messageModel from "./dao/models/message.model.js";
+import { productDao } from "./dao/index.js";
+import { options } from "./config/options.config.js";
+import { connectDB } from "./config/connectDb.config.js";
 
 
 const app = express();
-const PORT = 8080;
+const PORT = options.server.port;
 const httpServer = app.listen(PORT, () => console.log(`Servidor abierto en el puerto ${8080}`));
 const socketServer = new Server(httpServer);
 
-const productManager = new ProductManagerDB();
-
-const MONGO = "mongodb+srv://luchodepetris727:ywsj4LY2H1eGEjOu@cluster0.45guaro.mongodb.net/ecommerce";
-const connection = mongoose.connect(MONGO);
-
+connectDB();
 
 app.engine("handlebars", handlebars.engine({
     runtimeOptions: {
@@ -41,7 +40,7 @@ app.use(express.json());
 
 app.use(session({
     store: new MongoStore({
-        mongoUrl: MONGO,
+        mongoUrl: options.mongo.url,
     }),
     secret: "CoderSecret",
     resave: false,
@@ -63,8 +62,8 @@ socketServer.on("connection", (socket) => {
         try {
             console.log('Datos del producto recibidos en el servidor:', productData);
 
-            await productManager.getProducts();
-            await productManager.addProduct({});
+            await productDao.getProducts();
+            await productDao.addProduct({});
 
             socketServer.emit('newProduct', productData);
         } catch (error) {

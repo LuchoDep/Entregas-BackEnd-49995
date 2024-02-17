@@ -1,3 +1,4 @@
+import passport from "passport";
 
 export const registerUser = async (req, res) => {
 
