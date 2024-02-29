@@ -180,7 +180,6 @@ export const updateProductQuantity = async (req, res) => {
         await manager.updateProductQuantity(cid, pid, quantity);
 
         res.json({
-
             message: "Se modificó la cantidad del producto",
             productId: pid,
             cid: cid,
@@ -194,67 +193,56 @@ export const updateProductQuantity = async (req, res) => {
 };
 
 export const buyCart = async (req, res) => {
-
     try {
+        const cart = await CartService.findById(req.params.cid).populate('products.product');
+        if (!cart) return res.status(404).send('Carrito no encontrado');
 
-        const cartId = req.params.cid;
-        const cart = await CartService.getCartByID(cartId);
+        let totalAmount = 0;
+        const productsToUpdate = [];
+        const productsNotAvailable = [];
 
-        if (cart) {
+        cart.products.forEach(item => {
 
-            if (!cart.products.length) {
+            const product = item.product;
 
-                return res.send("")
+            if (product.stock < item.quantity) {
+
+                productsNotAvailable.push({ productId: product._id, title: product.title });
+
+            } else {
+
+                totalAmount += product.price * item.quantity;
+
+                productsToUpdate.push({ product, quantity: item.quantity });
 
             }
-            const ticketProducts = [];
+        });
 
-            const rejectedProducts = [];
+        if (productsNotAvailable.length === 0) {
 
-            for (let i = 0; i < cart.products.length; i++) {
+            await Promise.all(productsToUpdate.map(({ product, quantity }) =>
 
-                const cartProduct = cart.products[i];
+                ProductService.findByIdAndUpdate(product._id, { $inc: { stock: -quantity } })
 
-                const productDB = await ProductService.getProductByID(cartProduct.product._id);
+            ));
 
-                if (!productDB) {
+            const purchaserEmail = req.user.email; 
 
-                    return res.status(404).json({
+            const ticket = new ticketsModel.create({
+                purchaser: purchaserEmail,
+                amount: totalAmount,
+            });
+            await ticket.save();
 
-                        message: 'No se encontro el producto'
+            cart.products = [];
+            await cart.save();
 
-                    })
-
-                }
-
-                if (cartProduct.quantity <= productDB.stock) {
-
-                    ticketProducts.push(cartProduct);
-
-                } else {
-
-                    rejectedProducts.push(cartProduct);
-
-                }
-            }
-
-            const newTicket = {
-                code: uuidv4(),
-                purchase_datetime: new Date(),
-                amount: 500,
-                purchaser: 'email@email.com'
-            }
-
-            const ticketCreated = await ticketsModel.create(newTicket);
-
-            res.send(ticketCreated)
+            res.json({ message: 'Compra realizada con éxito', ticketId: ticket._id, cartCleared: true });
         } else {
-
-            res.send("el carrito no existe")
-
+            res.status(400).json({ message: 'Algunos productos no están disponibles', productsNotAvailable });
         }
-    } catch (error) {
 
-        res.send(error.message)
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
