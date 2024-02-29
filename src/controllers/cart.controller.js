@@ -1,10 +1,12 @@
-import { cartDao } from "../dao/index.js";
+import { CartService, ProductService } from "../repository";
+import { ticketsModel } from "../dao/models/ticket.model.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const getCarts = async (req, res) => {
 
     try {
 
-        const carts = await cartDao.getCarts();
+        const carts = await CartService.getCarts();
         res.send({ status: "success", payload: carts });
 
     } catch (error) {
@@ -19,7 +21,7 @@ export const getCartById = async (req, res) => {
 
         const cartId = req.params.cid;
 
-        const cart = await cartDao.findOne({ cartId });
+        const cart = await CartService.findOne({ cartId });
 
         res.send({ status: "success", payload: cart });
 
@@ -32,7 +34,7 @@ export const createCart = async (req, res) => {
 
     try {
 
-        const cart = await cartDao.createCart();
+        const cart = await CartService.createCart();
 
         return {
             status: "success",
@@ -50,7 +52,7 @@ export const addProductToCart = async (req, res) => {
 
     try {
 
-        const cart = await cartDao.findOne({ _id: req.params.cid });
+        const cart = await CartService.findOne({ _id: req.params.cid });
 
         const oldProduct = cart.products.find(
             ({ product }) => product.toString() === req.params.pid
@@ -70,7 +72,7 @@ export const addProductToCart = async (req, res) => {
             });
         }
 
-        const update = await cartDao.updateOne({ _id: req.params.cid }, cart);
+        const update = await CartService.updateOne({ _id: req.params.cid }, cart);
 
         res.send(update);
 
@@ -84,7 +86,7 @@ export const deleteCart = async (req, res) => {
 
     try {
         const cid = req.params.cid;
-        const deleteCart = await cartDao.deleteCart(cid);
+        const deleteCart = await CartService.deleteCart(cid);
 
         if (deleteCart) {
 
@@ -109,7 +111,7 @@ export const deleteProductFromCart = async (req, res) => {
         const cid = req.params.cid;
         const pid = req.params.pid;
 
-        const cart = await cartDao.getCartById(cid);
+        const cart = await CartService.getCartById(cid);
 
         if (!cart) {
 
@@ -123,7 +125,7 @@ export const deleteProductFromCart = async (req, res) => {
 
         }
 
-        await cartDao.deleteProductFromCart(cid, pid);
+        await CartService.deleteProductFromCart(cid, pid);
 
         res.json({
             message: "Producto eliminado del carrito",
@@ -145,7 +147,7 @@ export const updatedCart = async (req, res) => {
         const cid = req.params.cid;
         const updatedCartData = req.body;
 
-        const cart = await cartDao.getCartById(cid);
+        const cart = await CartService.getCartById(cid);
 
         if (!cart) {
 
@@ -190,3 +192,69 @@ export const updateProductQuantity = async (req, res) => {
     }
 
 };
+
+export const buyCart = async (req, res) => {
+
+    try {
+
+        const cartId = req.params.cid;
+        const cart = await CartService.getCartByID(cartId);
+
+        if (cart) {
+
+            if (!cart.products.length) {
+
+                return res.send("")
+
+            }
+            const ticketProducts = [];
+
+            const rejectedProducts = [];
+
+            for (let i = 0; i < cart.products.length; i++) {
+
+                const cartProduct = cart.products[i];
+
+                const productDB = await ProductService.getProductByID(cartProduct.product._id);
+
+                if (!productDB) {
+
+                    return res.status(404).json({
+
+                        message: 'No se encontro el producto'
+
+                    })
+
+                }
+
+                if (cartProduct.quantity <= productDB.stock) {
+
+                    ticketProducts.push(cartProduct);
+
+                } else {
+
+                    rejectedProducts.push(cartProduct);
+
+                }
+            }
+
+            const newTicket = {
+                code: uuidv4(),
+                purchase_datetime: new Date(),
+                amount: 500,
+                purchaser: 'email@email.com'
+            }
+
+            const ticketCreated = await ticketsModel.create(newTicket);
+
+            res.send(ticketCreated)
+        } else {
+
+            res.send("el carrito no existe")
+
+        }
+    } catch (error) {
+
+        res.send(error.message)
+    }
+}

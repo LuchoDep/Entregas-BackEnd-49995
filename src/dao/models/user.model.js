@@ -9,7 +9,12 @@ const schema = new mongoose.Schema({
     email:String,
     age:Number,
     password:String,
-    rol: String,
+    rol: {
+        type: String,
+        required:true,
+        enum:["user","admin"],
+        default: 'user',
+    },
     cart: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' }
 });
 

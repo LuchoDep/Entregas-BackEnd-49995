@@ -1,4 +1,4 @@
-import { productDao } from "../dao/index.js";
+import { ProductService } from "../repository/index.js";
 
 export const getProducts = async (req, res) => {
 
@@ -20,7 +20,7 @@ export const getProducts = async (req, res) => {
         const modelLimit = limit ? parseInt(limit, 10) : 10;
         const modelPage = page ? parseInt(page, 10) : 1;
 
-        const products = await productDao.paginate(modelQuery, {
+        const products = await ProductService.paginate(modelQuery, {
             limit: modelLimit,
             page: modelPage,
             sort: sortOption,
@@ -43,7 +43,7 @@ export const getProductById = async (req, res) => {
 
         const pid = req.params.pid;
 
-        const producto = await productDao.getProductById(pid);
+        const producto = await ProductService.getProductById(pid);
 
         if (producto) {
 
@@ -74,7 +74,7 @@ export const addProduct = async (req, res) => {
             product.status = true
         };
     
-        await productDao.addProduct(product);
+        await ProductService.addProduct(product);
         res.status(200).send("Producto agregado");
 
     } catch (error) {
@@ -91,7 +91,7 @@ export const updateProduct = async (req, res) => {
 
         const update = req.body;
 
-        await productDao.updateProduct(id, update);
+        await ProductService.updateProduct(id, update);
 
         res.send("Producto actualizado");
 
