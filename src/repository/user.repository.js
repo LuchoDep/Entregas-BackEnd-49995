@@ -1,4 +1,4 @@
-import { CreateUsersDto, GetUserDto } from "../dao/dto/userDto.js";
+import { CreateUserDto, GetUserDto } from "../dao/dto/userDto.js";
 
 class UserRepository {
     constructor(dao){

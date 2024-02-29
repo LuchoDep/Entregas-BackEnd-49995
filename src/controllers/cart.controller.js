@@ -1,4 +1,4 @@
-import { CartService, ProductService } from "../repository";
+import { CartService, ProductService } from "../repository/index.js";
 import { ticketsModel } from "../dao/models/ticket.model.js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -229,6 +229,7 @@ export const buyCart = async (req, res) => {
             const purchaserEmail = req.user.email; 
 
             const ticket = new ticketsModel.create({
+                code: uuidv4(),
                 purchaser: purchaserEmail,
                 amount: totalAmount,
             });

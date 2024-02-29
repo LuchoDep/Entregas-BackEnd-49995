@@ -1,6 +1,5 @@
 import productModel from "../dao/models/product.model.js";
-import { productDao } from "../dao/index.js";
-
+import ProductRepository from "../repository/product.repository.js";
 
 const renderProducts = async (req, res, viewName) => {
     try {
@@ -49,7 +48,7 @@ export const realTimeProducts = async (req, res) => {
 
 export const home = async (req, res) => {
     try {
-        const products = await productDao.getProducts();
+        const products = await ProductRepository.getProducts();
         res.render('home', { products, user: req.session.user });
 
     } catch (error) {

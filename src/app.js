@@ -13,7 +13,7 @@ import cartRouter from "./routes/carts.routes.js";
 import sessionRouter from "./routes/sessions.routes.js"
 import viewsRouter from "./routes/views.routes.js";
 import messageModel from "./dao/models/message.model.js";
-import { productDao } from "./dao/index.js";
+import { ProductService } from "./repository/index.js"
 import { options } from "./config/options.config.js";
 import { connectDB } from "./config/connectDb.config.js";
 
@@ -62,8 +62,8 @@ socketServer.on("connection", (socket) => {
         try {
             console.log('Datos del producto recibidos en el servidor:', productData);
 
-            await productDao.getProducts();
-            await productDao.addProduct({});
+            await ProductService.getProducts();
+            await ProductService.addProduct({});
 
             socketServer.emit('newProduct', productData);
         } catch (error) {

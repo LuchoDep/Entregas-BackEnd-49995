@@ -1,4 +1,4 @@
-export class ProductRepository {
+class ProductRepository {
     constructor(dao) {
         this.dao = dao;
     }
@@ -49,3 +49,5 @@ export class ProductRepository {
         }
     }
 }
+
+export default ProductRepository;
