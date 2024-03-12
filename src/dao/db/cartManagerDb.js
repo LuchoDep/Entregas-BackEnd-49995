@@ -15,7 +15,7 @@ class CartManagerDb {
 
 	getCartById = async (cid) => {
 
-		const cart = await cartModel.findOne({ _id: cid });
+		const cart = await cartModel.findOne({ _id: cid }).populate('products.product');
 
 		if (!cart) {
 			console.log(`Carrito con ID ${cid} no encontrado.`);
@@ -54,45 +54,53 @@ class CartManagerDb {
 		} catch (error) {
 			console.log({
 				status: "error",
-				message: "No se pudo obtener los produtos del carrito", error
+				message: "No se pudo obtener los productos del carrito", error
 			});
 		}
 	}
 
-	addProductInCart = async (cid, pid, quantity) => {
+	addProductToCart = async (cid, pid, quantity) => {
 		try {
-			const cart = await cartModel.findById(cid);
-			if (!cart) {
-				throw new Error(`El carrito con el ID ${cid} no existe`);
+
+			if (isNaN(quantity) || quantity <= 0) {
+				throw new Error('La cantidad debe ser un número válido y mayor que cero');
 			}
-	
+
+			const cart = await cartModel.findById(cid).populate('products.product');
+
+			if (!cart) {
+				throw new Error(`El carrito con el id ${cid} no existe`);
+			}
+
 			const product = await productModel.findById(pid);
 
 			if (!product) {
-				throw new Error(`El producto con el ID ${pid} no existe`);
+				throw new Error(`El producto con el id ${pid} no existe`);
 			}
-	
-			const productExistsInCart = cart.products.some(prod => prod.product === pid);
 
-			if (!productExistsInCart) {
-				const newProduct = {
-					product: pid,
+			const productInCart = cart.products.find(item => item.product._id.equals(pid));
+
+			if (!productInCart) {
+				cart.products.push({
+					product: product,
 					quantity: quantity
-				};
-				cart.products.push(newProduct);
+				});
 			} else {
-				const existingProduct = cart.products.find(prod => prod.product === pid);
-				existingProduct.quantity += quantity;
-	
-				if (existingProduct.quantity <= 0) {
-					cart.products = cart.products.filter(prod => prod.product !== pid);
-				}
+				productInCart.quantity += quantity;
 			}
-	
+
+			cart.total = cart.products.reduce((total, item) => total + item.product.price * item.quantity, 0);
+
 			await cart.save();
-			return cart;
+
+			return {
+				status: "Success",
+				msg: "Producto agregado correctamente al carrito"
+			};
+
 		} catch (error) {
-			throw new Error(`Error al agregar el producto al carrito: ${error.message}`);
+			console.error('Error al intentar agregar producto al carrito:', error.message);
+			throw new Error('Error al intentar agregar producto al carrito');
 		}
 	}
 
@@ -110,7 +118,6 @@ class CartManagerDb {
 			throw new Error(`Error al eliminar el carrito con ID ${cid}: ${error.message}`);
 		}
 	}
-
 
 	deleteProductFromCart = async (cid, pid) => {
 		try {
@@ -133,39 +140,38 @@ class CartManagerDb {
 	}
 
 	updateProductQuantity = async (cid, pid, quantity) => {
-
 		try {
-
 			const cart = await cartModel.findById(cid);
-
+	  
 			if (!cart) {
-
-				throw new Error(`El carrito con el ID ${cid} no existe`);
+			  throw new Error('El carrito no existe');
 			}
-	
-			const productIndex = cart.products.findIndex(prod => prod.product.toString() === pid);
-
+	  
+			const productIndex = cart.products.findIndex(product => product.pid === pid);
+	  
 			if (productIndex === -1) {
-
-				throw new Error(`El producto con el ID ${pid} no está en el carrito`);
+			  throw new Error('El producto no está en el carrito');
 			}
-	
-			cart.products[productIndex].quantity = quantity;
-
-			if (quantity <= 0) {
-
-				cart.products.splice(productIndex, 1);
+	  
+			const product = await this.productModel.getProductById(pid);
+	  
+			if (!product) {
+			  throw new Error('El producto no existe');
 			}
-	
+	  
+			if (newQuantity > product.stock) {
+			  throw new Error('No hay suficiente stock disponible');
+			}
+	  
+			cart.products[productIndex].quantity = newQuantity;
+	  
 			await cart.save();
-
-			return cart;
-
-		} catch (error) {
-
-			throw new Error(`Error al actualizar la cantidad del producto en el carrito: ${error.message}`);
-			
-		}
+	  
+			return { status: 'success', message: 'Cantidad del producto actualizada en el carrito' };
+		  } catch (error) {
+			return { status: 'error', message: error.message };
+		  }
+		
 	}
 
 }

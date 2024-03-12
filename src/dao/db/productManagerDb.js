@@ -2,71 +2,66 @@ import productModel from "../models/product.model.js";
 
 class ProductManagerDB {
 
-	async getProducts(query, sortOrder, options, category) {
+	async getProducts(limit, page, sort, category, availability, query) {
 
-		try {
-			let filter = {};
-
-			if (query) {
-				filter.$or = [
-					{ title: { $regex: new RegExp(query, 'i') } },
-					{ description: { $regex: new RegExp(query, 'i') } },
-					{ $text: { $search: query } },
-				];
-			}
-
+			const filter = {};
 			if (category) {
 				filter.category = category;
 			}
-
-			const sortOption = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
-
-			const paginate = await productModel.paginate(filter, { ...options, sort: sort });
-
-			return paginate;
-
-		} catch (error) {
-			console.log("Error al obtener productos")
-		}
-	}
-
-	async addProduct(
-		title,
-		description,
-		price,
-		thumbnail,
-		code,
-		stock,
-		status,
-		category
-	) {
-		const newProduct = {
-			title,
-			description,
-			price,
-			thumbnail,
-			code,
-			stock,
-			status,
-			category,
-		};
-		try {
-
-			const repeatCode = await productModel.find({ code: newProduct.code });
-			if (repeatCode) {
-				throw new Error("El código está repetido");
+			if (availability) {
+				filter.stock = { $gt: 0 };
 			}
-			const products = await productModel.create(newProduct);
-			return products;
-
-		} catch (error) {
-			throw new Error(`No se pudo crear el producto: ${error.message}`);
-		}
-	}
+			if (query) {
+				filter.$or = [
+					{ title: { $regex: new RegExp(query, 'i') } },
+				];
+			}
+	
+			const options = {
+				limit: limit ? parseInt(limit, 10) : 5,
+				page: page !== undefined ? parseInt(page, 10) : 1,
+				sort: { price: sort === "asc" ? 1 : -1 },
+				lean: true
+			};
+	
+			const products = await productModel.paginate(filter, options);
+	
+			const queryParamsForPagination = {
+				limit: options.limit,
+				page: options.page,
+				sort,
+				category,
+				availability,
+				query
+			};
+	
+			Object.keys(queryParamsForPagination).forEach(
+				key => queryParamsForPagination[key] === undefined && delete queryParamsForPagination[key]
+			);
+	
+			const baseLink = '/products';
+			const prevLink = products.hasPrevPage
+				? `${baseLink}?${new URLSearchParams({ ...queryParamsForPagination, page: options.page - 1 }).toString()}`
+				: null;
+	
+			const nextLink = products.hasNextPage
+				? `${baseLink}?${new URLSearchParams({ ...queryParamsForPagination, page: options.page + 1 }).toString()}`
+				: null;
+	
+			return {
+				status: "success",
+				msg: {
+					...products,
+					prevLink,
+					nextLink
+				}
+			};
+		};
 
 	async getProductById(pid) {
 		try {
-			const product = await productModel.findById(pid);
+			const product = await productModel.findOne({ _id: pid });
+			// console.log("producto del manager:", product);
 			if (!product) {
 				throw new Error(`No se encontró el producto con ID ${pid}`);
 			}

@@ -13,9 +13,9 @@ class ProductRepository {
         }
     }
 
-    async getProductByID(pid) {
+    async getProductById(pid) {
         try {
-            const result = await this.dao.getProductByID(pid);
+            const result = await this.dao.getProductById(pid);
             return result
         } catch (error) {
             throw new Error(`Error: ${error.message}`);

@@ -18,15 +18,21 @@ export const getCarts = async (req, res) => {
 export const getCartById = async (req, res) => {
 
     try {
+        const cid = req.params.cid;
 
-        const cartId = req.params.cid;
+        if (!cid) {
+            return res.status(400).json({ error: "Datos incompletos" });
+        }
 
-        const cart = await CartService.findOne({ cartId });
-
-        res.send({ status: "success", payload: cart });
+        const result = await CartService.getCartById(cid);
+        res.status(200).json({
+            status: result.status,
+            msg: result
+        });
 
     } catch (error) {
-        res.send({ status: "error", message: error.message });
+        console.error("Error al agregar producto al carrito:", error.message);
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 
@@ -51,34 +57,17 @@ export const createCart = async (req, res) => {
 export const addProductToCart = async (req, res) => {
 
     try {
+        const cid = req.params.cid;
+        const pid = req.params.pid;
 
-        const cart = await CartService.findOne({ _id: req.params.cid });
-
-        const oldProduct = cart.products.find(
-            ({ product }) => product.toString() === req.params.pid
-        );
-
-        if (oldProduct) {
-
-            oldProduct.quantity += 1;
-
-        } else {
-
-            cart.products.push({
-
-                product: req.params.pid,
-                quantity: 1,
-
-            });
-        }
-
-        const update = await CartService.updateOne({ _id: req.params.cid }, cart);
-
-        res.send(update);
-
-
+        const result = await CartService.addProductToCart(cid, pid);
+        res.status(200).json({
+            status: result.status,
+            msg: result
+        });
     } catch (error) {
-        res.send({ status: "error", message: error.message });
+        console.error("Error al agregar producto al carrito:", error.message);
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 
@@ -114,15 +103,11 @@ export const deleteProductFromCart = async (req, res) => {
         const cart = await CartService.getCartById(cid);
 
         if (!cart) {
-
             return res.status(404).json({ error: "No se encontró el carrito" });
-
         }
 
         if (cart.quantity <= 0) {
-
             return res.status(400).json({ error: "La cantidad debe ser mayor a 0" });
-
         }
 
         await CartService.deleteProductFromCart(cid, pid);
@@ -170,69 +155,89 @@ export const updatedCart = async (req, res) => {
 };
 
 export const updateProductQuantity = async (req, res) => {
-
     try {
-
         const cid = req.params.cid;
         const pid = req.params.pid;
-        const quantity = req.body.quantity;
 
-        await manager.updateProductQuantity(cid, pid, quantity);
+        const cart = await CartService.getCartById(cid);
+        if (!cart) {
+            return res.status(404).send('Carrito no encontrado');
+        }
 
-        res.json({
-            message: "Se modificó la cantidad del producto",
-            productId: pid,
-            cid: cid,
-        });
+        const productIndex = cart.products.findIndex(p => p.product.toString() === pid);
+        if (productIndex === -1) {
+            return res.status(404).send('Producto no encontrado en el carrito');
+        }
 
+        const quantityChange = req.body.quantityChange;
+        cart.products[productIndex].quantity += quantityChange;
 
+        if (cart.products[productIndex].quantity <= 0) {
+            cart.products.splice(productIndex, 1);
+        }
+
+        await cart.save();
+        res.send('Cantidad actualizada');
     } catch (error) {
-        res.send({ status: "error", message: error.message });
+        console.error('Error en updateProductQuantityInCart:', error);
+        res.status(500).json({ error: error.message });
     }
-
 };
 
 export const buyCart = async (req, res) => {
     try {
-        const cart = await CartService.findById(req.params.cid).populate('products.product');
+        const cid = req.params.cid;
+
+        const cart = await CartService.getCartById(cid);
+        console.log(cart);
         if (!cart) return res.status(404).send('Carrito no encontrado');
 
-        let totalAmount = 0;
+        const totalAmount = cart.products.reduce((total, item) => {
+            return total + (item.product.price * item.quantity);
+        }, 0);
         const productsToUpdate = [];
         const productsNotAvailable = [];
 
-        cart.products.forEach(item => {
-
+        cart.products.forEach(item => { 
             const product = item.product;
 
+            console.log("Precio del producto:", product.price);
+            console.log("Cantidad del producto:", item.quantity);
+
             if (product.stock < item.quantity) {
-
                 productsNotAvailable.push({ productId: product._id, title: product.title });
-
             } else {
-
-                totalAmount += product.price * item.quantity;
-
                 productsToUpdate.push({ product, quantity: item.quantity });
-
             }
         });
 
         if (productsNotAvailable.length === 0) {
-
             await Promise.all(productsToUpdate.map(({ product, quantity }) =>
-
-                ProductService.findByIdAndUpdate(product._id, { $inc: { stock: -quantity } })
-
+                CartService.updateProductQuantity(product._id, { $inc: { stock: -quantity } })
             ));
 
-            const purchaserEmail = req.user.email; 
+            const purchaserEmail = "test@mail.com";
 
-            const ticket = new ticketsModel.create({
+            const productsList = cart.products.map(item => {
+                return {
+                    pid: item.product._id,
+                    productName: item.product.title,
+                    quantity: item.quantity,
+                    price: item.product.price
+                };
+            });
+
+            const ticket = new ticketsModel ({
                 code: uuidv4(),
                 purchaser: purchaserEmail,
+                date: Date.now(),
                 amount: totalAmount,
+                products: productsList
             });
+            console.log("ticket:", ticket);
+            console.log("totalAmount:", totalAmount);
+
+
             await ticket.save();
 
             cart.products = [];

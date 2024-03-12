@@ -8,9 +8,9 @@ class CartRepository {
         return carts;
     }
 
-    async getCartByID(cid) {
+    async getCartById(cid) {
         try {
-            const cart = await this.dao.getCartByID(cid);
+            const cart = await this.dao.getCartById(cid);
             return cart;
         } catch (error) {
             throw new Error(`Error al obtener el carrito: ${error.message}`);
@@ -27,12 +27,12 @@ class CartRepository {
     }
 
 
-    async addProductInCart(cid, productId, quantity) {
+    async addProductToCart(cid, pid, quantity) {
         try {
-            const result = await this.dao.addProductInCart(cid, productId, quantity);
+            const result = await this.dao.addProductToCart(cid, pid, quantity);
             return result;
         } catch (error) {
-            throw error;
+            throw new Error(`Error al agregar producto al carrito: ${error.message}`); 
         }
     }
 
@@ -41,7 +41,7 @@ class CartRepository {
             const deletedCart = await CartModel.findByIdAndDelete(cid);
             return deletedCart;
         } catch (error) {
-            throw new Error(`Error al eliminar el carrito: ${error.message}`);
+            throw new Error(`Error al eliminar el carrito: ${error.message}`); 
         }
     }
 
@@ -51,36 +51,13 @@ class CartRepository {
             return result;
         } catch (error) {
             throw new Error(`Error al quitar el producto: ${error.message}`);
-
         }
     }
 
     async updateProductQuantity(cid, pid, quantity) {
         try {
-            const cart = await this.dao.findById(cid);
-            if (!cart) {
-
-                throw new Error(`El carrito con el ID ${cid} no existe`);
-            }
-
-            const productIndex = cart.products.findIndex(prod => prod.product.toString() === pid);
-
-            if (productIndex === -1) {
-
-                throw new Error(`El producto con el ID ${pid} no está en el carrito`);
-            }
-
-            cart.products[productIndex].quantity = quantity;
-
-            if (quantity <= 0) {
-
-                cart.products.splice(productIndex, 1);
-            }
-
-            await cart.save();
-
+            const cart = await this.dao.updateProductQuantity(cid, pid, quantity);
             return cart;
-
         } catch (error) {
             throw new Error(`Error al actualizar la cantidad del producto en el carrito: ${error.message}`);
         }
