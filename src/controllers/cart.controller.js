@@ -1,17 +1,15 @@
-import { CartService, ProductService } from "../repository/index.js";
+import { CartService, UserService } from "../repository/index.js";
 import { ticketsModel } from "../dao/models/ticket.model.js";
 import { v4 as uuidv4 } from "uuid";
 
 export const getCarts = async (req, res) => {
 
     try {
-
         const carts = await CartService.getCarts();
         res.send({ status: "success", payload: carts });
 
     } catch (error) {
-        res.send({ status: "error", message: error.message });
-
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 
@@ -31,7 +29,6 @@ export const getCartById = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error al agregar producto al carrito:", error.message);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
@@ -49,7 +46,7 @@ export const createCart = async (req, res) => {
         };
 
     } catch (error) {
-        res.send({ status: "error", message: error.message });
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 
 };
@@ -59,14 +56,14 @@ export const addProductToCart = async (req, res) => {
     try {
         const cid = req.params.cid;
         const pid = req.params.pid;
+        const quantity = req.body.quantity;
 
-        const result = await CartService.addProductToCart(cid, pid);
+        const result = await CartService.addProductToCart(cid, pid, quantity);
         res.status(200).json({
             status: result.status,
             msg: result
         });
     } catch (error) {
-        console.error("Error al agregar producto al carrito:", error.message);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
@@ -78,18 +75,13 @@ export const deleteCart = async (req, res) => {
         const deleteCart = await CartService.deleteCart(cid);
 
         if (deleteCart) {
-
             res.json({ message: `El carrito de ID ${cid} fue eliminado` });
-
         } else {
-
             res.status(404).json({ error: `El carrito de ID ${cid} no se encontró` });
-
         }
 
-
     } catch (error) {
-        res.send({ status: "error", message: error.message });
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 
 };
@@ -111,7 +103,6 @@ export const deleteProductFromCart = async (req, res) => {
         }
 
         await CartService.deleteProductFromCart(cid, pid);
-
         res.json({
             message: "Producto eliminado del carrito",
             pid: pid,
@@ -120,7 +111,7 @@ export const deleteProductFromCart = async (req, res) => {
 
 
     } catch (error) {
-        res.send({ status: "error", message: error.message });
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 
 };
@@ -135,12 +126,10 @@ export const updatedCart = async (req, res) => {
         const cart = await CartService.getCartById(cid);
 
         if (!cart) {
-
             return res.status(404).json({ error: "No se encontró el carrito" });
         }
 
         if (updatedCartData.products) {
-
             cart.products = [...cart.products, ...updatedCartData.products];
         }
 
@@ -186,6 +175,7 @@ export const updateProductQuantity = async (req, res) => {
 
 export const buyCart = async (req, res) => {
     try {
+        const user = req.params.user;
         const cid = req.params.cid;
 
         const cart = await CartService.getCartById(cid);
@@ -198,7 +188,7 @@ export const buyCart = async (req, res) => {
         const productsToUpdate = [];
         const productsNotAvailable = [];
 
-        cart.products.forEach(item => { 
+        cart.products.forEach(item => {
             const product = item.product;
 
             console.log("Precio del producto:", product.price);
@@ -216,7 +206,7 @@ export const buyCart = async (req, res) => {
                 CartService.updateProductQuantity(product._id, { $inc: { stock: -quantity } })
             ));
 
-            const purchaserEmail = "test@mail.com";
+            const purchaserEmail = user;
 
             const productsList = cart.products.map(item => {
                 return {
@@ -227,7 +217,7 @@ export const buyCart = async (req, res) => {
                 };
             });
 
-            const ticket = new ticketsModel ({
+            const ticket = new ticketsModel({
                 code: uuidv4(),
                 purchaser: purchaserEmail,
                 date: Date.now(),

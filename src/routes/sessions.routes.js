@@ -4,11 +4,12 @@ import {
     registerUser,
     loginUser,
     logoutUser,
-    failRegister,
-    failLogin,
     githubAuthCallback,
-    githubAuth 
-} from "../controllers/sessions.controller.js"
+    githubAuth, 
+    current,
+    forgotPassword,
+    resetPassword
+} from "../controllers/sessions.controller.js";
 
 
 const router = Router();
@@ -27,8 +28,20 @@ router.get("/githubcallback", githubAuthCallback, async (req, res) => {
   res.redirect("/");
 });
 
-router.get("/failregister", failRegister);
+router.get("/failregister", async (req, res) => {
+  console.log('Fallo el registro');
+  res.send({ error: 'fallo en el registro' });
+});
 
-router.get("/faillogin", failLogin);
+router.get("/faillogin",(req,res)=>{
+  res.send({error:"fail login"})
+});
+
+router.get("/current", current );
+
+
+router.post("/forgot-password", forgotPassword );
+
+router.post("/reset-password", resetPassword );
 
 export default router;

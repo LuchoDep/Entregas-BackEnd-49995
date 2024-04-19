@@ -88,6 +88,9 @@ const inicializePassport = () => {
                 return done(null, false)
             };
 
+            const newCart = new cartModel();
+            await newCart.save();
+
             const newUser = {
                 first_name,
                 last_name: "",

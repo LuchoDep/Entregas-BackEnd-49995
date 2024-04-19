@@ -6,17 +6,25 @@ import {
     updateProduct,
     deleteProduct
 } from "../controllers/products.controller.js";
+import { checkRole } from "../middlewares/auth.js";
+import { addLogger } from "../config/logger.config.js";
+import { uploader } from "../config/multer.config.js";
+import { errorHandler} from "../middlewares/errorHandler.js";
 
 const productRouter = Router();
 
-productRouter.get('/', getProducts);
+productRouter.use((err, req, res, next) => {
+    errorHandler(err, req, res, next)
+})
 
-productRouter.get("/:pid", getProductById);
+productRouter.get('/', addLogger, getProducts);
 
-productRouter.post("/", addProduct);
+productRouter.get("/:pid", addLogger, getProductById);
 
-productRouter.put("/:pid", updateProduct);
+productRouter.post("/", addLogger, checkRole(["admin", "premium"]), uploader.single('thumbnail'), addProduct);
 
-productRouter.delete("/:pid", deleteProduct);
+productRouter.put("/:pid", addLogger, checkRole(["admin", "premium"]), updateProduct);
+
+productRouter.delete("/:pid", addLogger, checkRole(["admin", "premium"]), deleteProduct);
 
 export default productRouter;

@@ -1,4 +1,3 @@
-
 export class CreateUserDto {
     constructor(user) {
         this.fullName = `${user.first_name} ${user.last_name}`;
@@ -6,7 +5,6 @@ export class CreateUserDto {
         this.lastName = user.last_name;
         this.email = user.email;
         this.password = user.password;
-       
     }
 }
 
@@ -17,6 +15,5 @@ export class GetUserDto {
         this.lastName = user.last_name;
         this.email = user.email;
         this.role = user.role;
-     
     }
 }

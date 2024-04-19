@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     code: {
-        type: Number,
+        type: String,
         required: true,
     },
     stock: {
@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema({
         required: true,
         index: true,
     },
+    owner: {
+        type: String,
+        required: true
+    }
 });
 
 productSchema.plugin(mongoosePaginate);

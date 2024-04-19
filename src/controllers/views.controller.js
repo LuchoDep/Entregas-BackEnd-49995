@@ -1,5 +1,7 @@
 import productModel from "../dao/models/product.model.js";
 import ProductRepository from "../repository/product.repository.js";
+import cartModel from "../dao/models/carts.model.js";
+import { UserService } from "../repository/index.js";
 
 const renderProducts = async (req, res, viewName) => {
     try {
@@ -31,8 +33,27 @@ const renderProducts = async (req, res, viewName) => {
             return res.status(404).json({ error: 'No se encontraron resultados' });
         }
 
-        res.render(viewName, { products, user: req.session.user });
+        const uid = req.session.user.email;
+        const user = await UserService.getUserByEmail(uid);
+        if(!user){
+            return res.status(404).send('Usuario no encontrado');
+        }
 
+        let cid = null;
+        if (user.cart) {
+            cid = user.cart._id;
+        }
+
+        if (!cid) {
+            return res.status(404).send('Carrito no encontrado para este usuario');
+        }
+        const cart = await cartModel.findById(cid);
+
+        if (!cart) {
+            return res.status(404).send('Carrito no encontrado');
+        }
+
+        res.render(viewName, { products, cart, user: req.session.user });
     } catch (error) {
         res.status(500).json({ status: 'error', message: 'Hubo un problema al obtener los productos' });
     }
@@ -50,7 +71,6 @@ export const home = async (req, res) => {
     try {
         const products = await ProductRepository.getProducts();
         res.render('home', { products, user: req.session.user });
-
     } catch (error) {
         console.error('Error al obtener la lista de productos:', error.message);
         res.status(500).send('Error interno del servidor');
@@ -69,6 +89,40 @@ export const login = (req, res) => {
     res.render('login');
 };
 
-export const profile = (req, res) => {
-    res.render('profile', { user: req.session.user });
+export const profile = async (req, res) => {
+    try {
+        const uid = req.session.user.email;
+        const user = await UserService.getUserByEmail(uid);
+        if(!user){
+            return res.status(404).send('Usuario no encontrado');
+        }
+
+        let cid = null;
+        if (user.cart) {
+            cid = user.cart._id;
+        }
+
+        if (!cid) {
+            return res.status(404).send('Carrito no encontrado para este usuario');
+        }
+        const cart = await cartModel.findById(cid);
+
+        if (!cart) {
+            return res.status(404).send('Carrito no encontrado');
+        }
+
+        res.render('profile', { cart, user: req.session.user });
+    } catch (error) {
+        console.error(`Error al obtener el perfil del usuario: ${error.message}`);
+        res.status(500).send('Error interno del servidor');
+    }
+};
+
+export const forgotPassword = async (req, res) => {
+    res.render("forgotPassword")
+};
+
+export const resetPassword = async (req, res) => {
+    const token = req.query.token;
+    res.render("resetPassword", { token })
 };

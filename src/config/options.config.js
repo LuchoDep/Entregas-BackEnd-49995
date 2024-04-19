@@ -17,5 +17,5 @@ export const options = {
     admin:{
         user: ADMIN_USER,
         password: ADMIN_PASS
-    }
+    },
 };

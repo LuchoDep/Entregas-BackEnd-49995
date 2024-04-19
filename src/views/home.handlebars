@@ -1,5 +1,6 @@
 {{#if user}}
 <h3>Bienvenido, {{user.first_name}} {{user.last_name}}</h3>
+<p>Carrito ID: {{cart._id}}</p>
 {{/if}}
 
 <h1>Lista de productos</h1>
@@ -14,7 +15,8 @@
                     <h5 class="card-title">{{title}}</h5>
                     <p class="card-text">{{description}}</p>
                     <p class="card-text">Precio: ${{price}}</p>
-                    <form action="" method="">
+                    <form action="/api/carts/{{cart._id}}/product/{{this._id}}" method="post">
+                        <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
                     </form>
                 </div>

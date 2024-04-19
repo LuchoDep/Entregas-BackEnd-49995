@@ -6,7 +6,9 @@ import {
     chat,
     register,
     profile,
-    login
+    login,
+    forgotPassword,
+    resetPassword
 } from "../controllers/views.controller.js";
 
 const router = Router();
@@ -38,5 +40,9 @@ router.get('/register', publicAccess, register);
 router.get('/login', publicAccess, login);
 
 router.get('/profile', privateAccess, profile);
+
+router.get(`/forgot-password`, forgotPassword);
+
+router.get(`/reset-password`, resetPassword);
 
 export default router

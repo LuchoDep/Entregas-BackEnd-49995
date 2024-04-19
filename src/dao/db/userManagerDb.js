@@ -23,9 +23,9 @@ class userManagerDb {
     }
 
    
-    async getUserById(userId) {
+    async getUserById(uid) {
         try {
-            const user = await userModel.findById(userId);
+            const user = await userModel.findById(uid);
             return user;
         } catch (error) {
             throw new Error(`Error al obtener el usuario: ${error.message}`);
@@ -43,18 +43,18 @@ class userManagerDb {
     }
 
     
-    async updateUser(userId, newData) {
+    async updateUser(uid, newData) {
         try {
-            const updatedUser = await userModel.findByIdAndUpdate(userId, newData, { new: true });
+            const updatedUser = await userModel.findByIdAndUpdate(uid, newData, { new: true });
             return updatedUser;
         } catch (error) {
             throw new Error(`Error al actualizar el usuario: ${error.message}`);
         }
     }
 
-    async deleteUser(userId) {
+    async deleteUser(uid) {
         try {
-            const deletedUser = await userModel.findByIdAndDelete(userId);
+            const deletedUser = await userModel.findByIdAndDelete(uid);
             return deletedUser;
         } catch (error) {
             throw new Error(`Error al eliminar el usuario: ${error.message}`);
