@@ -1,2 +1,19 @@
-<h1>Gracias por tu compra</h1>
-<p>Acá iría un ticket</p>
+<div>
+    <br>
+    {{#if tickets}}
+    {{#each tickets}}
+    <div>
+        <h2>Ticket: {{this.code}}</h2>
+        <p>Fecha: {{this.purchase_datetime}}</p>
+        {{#each this.products}}
+        <p>Producto: {{this.product.title}} - {{this.product.price}} .............. x {{this.quantity}}</p>
+        {{/each}}
+        <p>Total: {{this.amount}}</p>
+    </div>
+    {{/each}}
+    {{else}}
+    <p>Aún no tienes compras realizadas.</p>
+    {{/if}}
+    <br>
+</div>
+<a href="http://localhost:8080/profile">Volver al perfil</a>

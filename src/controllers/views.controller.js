@@ -3,6 +3,11 @@ import ProductRepository from "../repository/product.repository.js";
 import cartModel from "../dao/models/carts.model.js";
 import { UserService } from "../repository/index.js";
 import { GetUserDto } from "../dao/dto/userDto.js";
+import { options } from "../config/options.config.js";
+import { ticketsModel } from "../dao/models/ticket.model.js";
+import userModel from "../dao/models/user.model.js";
+
+const ADMIN_USER = options.admin.user;
 
 const renderProducts = async (req, res, viewName) => {
     try {
@@ -36,7 +41,7 @@ const renderProducts = async (req, res, viewName) => {
 
         const uid = req.session.user.email;
         const user = await UserService.getUserByEmail(uid);
-        if(!user){
+        if (!user) {
             return res.status(404).send('Usuario no encontrado');
         }
 
@@ -94,7 +99,7 @@ export const profile = async (req, res) => {
     try {
         const uid = req.session.user.email;
         const user = await UserService.getUserByEmail(uid);
-        if(!user){
+        if (!user) {
             return res.status(404).send('Usuario no encontrado');
         }
 
@@ -113,7 +118,7 @@ export const profile = async (req, res) => {
             return res.status(404).send('Carrito no encontrado');
         }
 
-        res.render('profile', { user: req.session.user, cart, products:cart.products });
+        res.render('profile', { user: req.session.user, cart, products: cart.products });
     } catch (error) {
         console.error(`Error al obtener el perfil del usuario: ${error.message}`);
         res.status(500).send('Error interno del servidor');
@@ -122,12 +127,17 @@ export const profile = async (req, res) => {
 
 export const ticketView = async (req, res) => {
     try {
-        res.render(`ticket`)
+        const purchaser = req.session.user.email;
+
+        const tickets = await ticketsModel.find({ purchaser: purchaser }).populate('products.product');
+        // console.log(`Tickets encontrados:`, tickets);
+
+        res.render('ticket', { tickets });
     } catch (error) {
         console.error(`Error al obtener el ticket: ${error.message}`);
         res.status(500).send('Error interno del servidor');
     }
-}
+};
 
 export const forgotPassword = async (req, res) => {
     res.render("forgotPassword")
@@ -138,16 +148,23 @@ export const resetPassword = async (req, res) => {
     res.render("resetPassword", { token })
 };
 
-export const adminUser = async (req,res) => {
+export const adminUser = async (req, res) => {
     try {
-      const users = await UserService.getUsers();
-      
-      const usersData = users.map(user => new GetUserDto(user))
-      console.log(usersMajorData)
+        const users = await userModel.find();
+        const admin = req.user;
+        const adminEmail = ADMIN_USER; 
 
-      res.render("adminUsers",  {usersData} );
-  } catch (error) {
-      console.error(error);
-      res.status(500).send("Error al obtener usuarios");
-  }
-}
+        if (admin.email === adminEmail) {
+            const adminUser = users.find(user => user.email === adminEmail);
+            if (adminUser) {
+                adminUser.role = 'admin';
+                await adminUser.save();
+            }
+        }
+
+        res.render("adminUsers", { admin, users });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al obtener usuarios");
+    }
+};

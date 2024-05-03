@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { options } from "./options.config.js";
 
-const ADMIN_USER = options.admin.user
-const ADMIN_PASS = options.admin.pass
+const ADMIN_USER = options.admin.user;
+const ADMIN_PASS = options.admin.password;
 
 export const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -40,7 +40,7 @@ export const verifyEmailToken = (token)=>{
 export const sendRecoveryPass = async (userEmail, token) => {
     const link = `http://localhost:8080/reset-password?token=${token}`
     await transporter.sendMail({
-        from: options.gmail.ADMIN_USER,
+        from: ADMIN_USER,
         to: userEmail,
         subject: "Restablecimiento de contraseña",
         html: `
@@ -57,7 +57,7 @@ export const sendRecoveryPass = async (userEmail, token) => {
 export const deletedUserEmail = async (userEmail) => {
     const link = `http://localhost:8080/register`
     await transporter.sendMail({
-        from: options.gmail.adminEmail,
+        from: ADMIN_USER,
         to: userEmail,
         subject: "Cuenta eliminada por inactividad",
         html: `
@@ -75,7 +75,7 @@ export const deletedProductEmail = async (userEmail, productData) =>{
     const link = `http://localhost:8080/login`
     const {title,description,code,_id} = productData
     await transporter.sendMail({
-        from: options.gmail.adminEmail,
+        from: ADMIN_USER,
         to: userEmail,
         subject: `El producto que usted ha publicado con el nombre ${title} ha sido eliminado`,
         html: `
@@ -91,6 +91,23 @@ export const deletedProductEmail = async (userEmail, productData) =>{
             <a href="${link}">
                 <button>Crear producto</button>
             </a>
+        </div>`
+    })
+};
+
+export const ticketEmail = async (userEmail, ticket) =>{
+    const link = `http://localhost:8080/login`
+    
+    await transporter.sendMail({
+        from: ADMIN_USER,
+        to: userEmail,
+        subject: `Compra realizada`,
+        html: `
+        <div>
+            <h2>Detalle de la compra:</h2>
+            <p><strong>Fecha:</strong>${ticket.purchase_datetime}</p>
+            <p><strong>Codigo del ticket:</strong> ${ticket.code}</p>
+            <p><strong>Comprador:</strong> ${ticket.purchaser}</p>
         </div>`
     })
 };

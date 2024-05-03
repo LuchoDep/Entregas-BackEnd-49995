@@ -5,9 +5,9 @@ class UserRepository {
 		this.dao = dao
 	}
 
-	async getUsers(userDB) {
-		const user = new GetUserDto(userDB)
-        return user
+	async getUsers() {
+		const users = await this.dao.getUsers();
+        return users
 	}
 
 	async getUserById(uid) {

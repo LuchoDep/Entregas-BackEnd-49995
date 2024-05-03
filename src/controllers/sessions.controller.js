@@ -1,7 +1,9 @@
 import passport from "passport";
+import bcrypt from "bcrypt";
 import { GetUserDto } from "../dao/dto/userDto.js";
 import userModel from "../dao/models/user.model.js";
 import { sendRecoveryPass, verifyEmailToken, generateEmailToken } from "../config/nodemailer.config.js";
+import { UserService } from "../repository/index.js";
 
 export const registerUser = async (req, res) => {
     res.send({ status: "success", message: "Usuario registrado" });
@@ -19,8 +21,13 @@ export const loginUser = async (req, res) => {
         last_name: req.user.last_name,
         email: req.user.email,
         age: req.user.age,
-        cart: req.user.cart
+        cart: req.user.cart,
+        role: req.user.role,
+        last_connection: new Date().toLocaleString()
     };
+
+    const uid = req.user._id;
+    await userModel.findByIdAndUpdate(uid, { last_connection: new Date()})
 
     res.send({ status: "success", payload: req.user });
 };
@@ -61,21 +68,22 @@ export const current = async (req, res) => {
     }
 };
 
-export const forgotPassword = async(req, res) => {
+export const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
-        const user = await userModel.findOne({ email });
+        const user = await UserService.getUserByEmail( email );
         if (!user) {
-            res.send(`<div>Error no existe el usuario, vuelva a intentar: <a href="/forgot-password">Intente de nuevo</a></div>`)
+            return res.send(`<div>Error: el usuario no existe. <a href="/forgot-password">Intente de nuevo</a></div>`);
         }
         const token = generateEmailToken(email, 60 * 3);
-        console.log(Object);
         await sendRecoveryPass(email, token);
-        res.send("Se envio el correo de recuperacion.")
+        return res.send("Se envió el correo de recuperación.");
     } catch (error) {
-        res.send(`<div>Error,<a href="/forgot-password">Intente de nuevo</a></div>`)
+        console.error(error);
+        return res.status(500).send(`<div>Error interno. <a href="/forgot-password">Intente de nuevo</a></div>`);
     }
 };
+
 
 export const resetPassword = async (req, res) => {
     try {
@@ -90,7 +98,7 @@ export const resetPassword = async (req, res) => {
             return res.send("El usuario no está registrado");
         }
 
-        const newPasswordHashed = createHash(newPassword);
+        const newPasswordHashed = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(10));
         user.password = newPasswordHashed;
         await user.save();
 

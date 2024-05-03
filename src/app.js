@@ -14,6 +14,7 @@ import cartRouter from "./routes/carts.routes.js";
 import sessionRouter from "./routes/sessions.routes.js"
 import viewsRouter from "./routes/views.routes.js";
 import loggerRouter from "./routes/logger.routes.js";
+import { userRouter } from "./routes/users.routes.js";
 import messageModel from "./dao/models/message.model.js";
 import { ProductService } from "./repository/index.js"
 import { options } from "./config/options.config.js";
@@ -55,12 +56,13 @@ inicializePassport()
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(`/`, viewsRouter);
-app.use(`/api`, mockRouter);
+app.use("/", viewsRouter);
+app.use("/api", mockRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
-app.use('/api/sessions', sessionRouter);
-app.use(`/api/logger`, loggerRouter);
+app.use("/api/sessions", sessionRouter);
+app.use("/api/users", userRouter);
+app.use("/api/logger", loggerRouter);
 app.use("/api/docs",checkRole(["admin", "premium"]),swaggerUi.serve,swaggerUi.setup(swaggerSpecs));
 
 socketServer.on("connection", (socket) => {

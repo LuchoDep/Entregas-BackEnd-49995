@@ -71,11 +71,11 @@ export const addProduct = async (req, res) => {
             code,
             stock,
             category,
-            owner: req.user && req.user.email ? req.user.email : "admin"
+            owner: owner
         }
 
         const result = await ProductService.addProduct(product);
-        res.send("Se ha creado el producto correctamente.")
+        res.send("Se ha creado el producto correctamente", result)
 
     } catch (error) {
         if (error.cause) {

@@ -1,30 +1,76 @@
-{{#if adminUsers}}
 <div>
-    {{#each adminUsers}}
-    <h1>Bienvenido {{this.fullName}}!</h1> 
-    <p>Email: {{this.email}}</p>
-    <p>Role: {{this.role}}</p>
+    <h1>Bienvenido {{admin.first_name}}!</h1>
+    <p>Email: {{admin.email}}</p>
+    <p>Role: {{admin.role}}</p>
     <br>
-        <form action="/api/users/updateUser" method="post">
-        <input type="hidden" name="_method" value="PUT">
-        <input type="hidden" name="uid" value="{{this._id}}">
+    {{#if users}}
+    {{#each users}}
+    <h3>Email: {{this.email}}</h3>
+    <p>Nombre y Apellido: <strong>{{this.first_name}} {{this.last_name}}</strong></p>
+    <p>User ID: <strong>{{this._id}}</strong></p>
+    <p>Rol: {{this.role}}</p>
+    <form id="updateUserForm-{{this._id}}">
         <select name="role">
             <option value="user">User</option>
             <option value="premium">Premium</option>
             <option value="admin">Admin</option>
         </select>
-        <button type="submit">Update Role</button>
-        </form>
-    <br>
-    <form action="/api/users/deleteUser" method="post">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="hidden" name="uid" value="{{this._id}}">
-        <button type="submit">Eliminar Usuario</button>
+        <button type="button" onclick="updateUser('{{this._id}}')">Actualizar rol</button>
     </form>
-    {{!-- <button>Cambiar rol</button> --}}
+    <br>
+    <form id="deleteUserForm-{{this._id}}">
+        <button type="button" onclick="deleteUser('{{this._id}}')">Eliminar Usuario</button>
+    </form>
     <br>
     {{/each}}
+    {{else}}
+    <p>No hay usuarios para mostrar</p>
+    {{/if}}
 </div>
-{{else}}
-<p>No hay usuarios para mostrar</p>
-{{/if}}
+
+<script>
+    async function updateUser(uid) {
+        const form = document.getElementById(`updateUserForm-${uid}`);
+        const newRole = form.querySelector('select[name="role"]').value;
+
+        try {
+            const response = await fetch(`/api/users/updateUser/${uid}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ role: newRole })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al actualizar el rol del usuario');
+            }
+
+            const data = await response.json();
+            alert(data.msg);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un error al actualizar el rol del usuario');
+        }
+    }
+
+    async function deleteUser(uid) {
+        try {
+            const response = await fetch(`/api/users/deleteUser/${uid}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al eliminar el usuario');
+            }
+
+            const data = await response.json();
+            alert(data.msg);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un error al eliminar el usuario');
+        }
+    }
+</script>

@@ -1,10 +1,12 @@
 <div>
     <div>
         <h1>Tu perfil</h1>
-        <p>Nombre: {{user.first_name}} {{user.last_name}}</p>
+        <p>Nombre: {{user.first_name}} {{user.last_name}} -- Rol: {{user.role}}</p>
         <p>Email: {{user.email}}</p>
         <p>Edad: {{user.age}}</p>
 
+        <a href="/products"><button>Productos</button></a>
+        <a href="/tickets"><button>Ver tus tickets</button></a>
         <a href="/api/sessions/logout"><button>Cerrar sesión</button></a>
     </div>
     <hr>
@@ -63,7 +65,7 @@
             })
             .then(data => {
                 alert('Compra completada correctamente');
-                window.location.replace('/ticket');
+                window.location.replace('/tickets');
             })
             .catch(error => {
                 console.error('Error:', error);

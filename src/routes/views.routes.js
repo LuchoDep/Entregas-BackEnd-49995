@@ -48,8 +48,9 @@ router.get(`/forgot-password`, forgotPassword);
 
 router.get(`/reset-password`, resetPassword);
 
-router.get(`/adminUsers`, checkRole(["admin"]), adminUser);
+router.get(`/adminUsers`, privateAccess, adminUser);
 
-router.get(`/ticket`, privateAccess, ticketView)
+router.get(`/tickets`, privateAccess, ticketView);
+
 
 export default router

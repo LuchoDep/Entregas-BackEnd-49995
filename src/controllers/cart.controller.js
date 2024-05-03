@@ -1,4 +1,5 @@
-import { CartService, UserService } from "../repository/index.js";
+import { CartService } from "../repository/index.js";
+import { ticketEmail } from "../config/nodemailer.config.js";
 import { ticketsModel } from "../dao/models/ticket.model.js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -176,7 +177,7 @@ export const buyCart = async (req, res) => {
 
         const totalAmount = cart.products.reduce((total, item) => {
             return total + (item.product.price * item.quantity);
-        }, 0);
+        }, 0).toFixed(2);
         const productsToUpdate = [];
         const productsNotAvailable = [];
 
@@ -218,16 +219,17 @@ export const buyCart = async (req, res) => {
             });
             console.log("ticket:", ticket);
             console.log("totalAmount:", totalAmount);
-            
-            await ticket.save();
 
+            await ticket.save();
+            await ticketEmail(purchaserEmail, ticket);
             cart.products = [];
             await cart.save();
 
-            res.json({ message: 'Compra realizada con éxito', ticketId: ticket._id, cartCleared: true });
+            res.json({ message: 'Compra realizada con éxito', ticketId: ticket._id });
         } else {
             res.status(400).json({ message: 'Algunos productos no están disponibles', productsNotAvailable });
         }
+
 
     } catch (error) {
         res.status(500).json({ error: error.message });
