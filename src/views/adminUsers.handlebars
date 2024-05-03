@@ -1,0 +1,30 @@
+{{#if adminUsers}}
+<div>
+    {{#each adminUsers}}
+    <h1>Bienvenido {{this.fullName}}!</h1> 
+    <p>Email: {{this.email}}</p>
+    <p>Role: {{this.role}}</p>
+    <br>
+        <form action="/api/users/updateUser" method="post">
+        <input type="hidden" name="_method" value="PUT">
+        <input type="hidden" name="uid" value="{{this._id}}">
+        <select name="role">
+            <option value="user">User</option>
+            <option value="premium">Premium</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button type="submit">Update Role</button>
+        </form>
+    <br>
+    <form action="/api/users/deleteUser" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="uid" value="{{this._id}}">
+        <button type="submit">Eliminar Usuario</button>
+    </form>
+    {{!-- <button>Cambiar rol</button> --}}
+    <br>
+    {{/each}}
+</div>
+{{else}}
+<p>No hay usuarios para mostrar</p>
+{{/if}}

@@ -12,7 +12,7 @@ export const getProducts = async (req, res) => {
             res.status(200).json({
                 status: "success",
                 products: productos,
-              });
+            });
         } else {
             res.status(404).json({ error: 'No se encontraron productos' });
         }
@@ -71,7 +71,7 @@ export const addProduct = async (req, res) => {
             code,
             stock,
             category,
-            owner
+            owner: req.user && req.user.email ? req.user.email : "admin"
         }
 
         const result = await ProductService.addProduct(product);
@@ -117,7 +117,6 @@ export const updateProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
-
 };
 
 export const deleteProduct = async (req, res) => {
@@ -137,6 +136,4 @@ export const deleteProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-
-
 };

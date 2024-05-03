@@ -17,24 +17,6 @@ export const transporter = nodemailer.createTransport({
     tls: { rejectUnauthorized: false }
 });
 
-export const sendRecoveryPass = async (userEmail, token) => {
-    const link = `http://localhost:8080/reset-password?token=${token}`
-    await transporter.sendMail({
-        from: options.gmail.ADMIN_USER,
-        to: userEmail,
-        subject: "Restablecimiento de contraseña",
-        html: `
-        <div>
-            <h2>Has solicitado un cambio de contraseña</h2>
-            <p>Haz click en el siguiente enlace para restablecer la contraseña</p>
-            <a href="${link}">
-                <button>Restablecer contraseña</button>
-            </a>
-            <h1>Por favor, siempre chequea que el origen de estos emails sea del dueño y/o creador de la pagina que tratas de cambiar la contraseña. Ademas, ten en cuenta que nunca te pediremos informacion sensible a traves de email u otro entorno que no sea el de la plataforma oficial. Ten precaucion.</h1>
-        </div>`
-    })
-}
-
 export const isValidPassword = (password, user)=>{
     return bcrypt.compareSync(password, user.password)
 };
@@ -53,4 +35,62 @@ export const verifyEmailToken = (token)=>{
         console.log(error.message);
         return null;
     }
+};
+
+export const sendRecoveryPass = async (userEmail, token) => {
+    const link = `http://localhost:8080/reset-password?token=${token}`
+    await transporter.sendMail({
+        from: options.gmail.ADMIN_USER,
+        to: userEmail,
+        subject: "Restablecimiento de contraseña",
+        html: `
+        <div>
+            <h2>Has solicitado un cambio de contraseña</h2>
+            <p>Haz click en el siguiente enlace para restablecer la contraseña</p>
+            <a href="${link}">
+                <button>Restablecer contraseña</button>
+            </a>
+        </div>`
+    })
+};
+
+export const deletedUserEmail = async (userEmail) => {
+    const link = `http://localhost:8080/register`
+    await transporter.sendMail({
+        from: options.gmail.adminEmail,
+        to: userEmail,
+        subject: "Cuenta eliminada por inactividad",
+        html: `
+        <div>
+            <h2>Tu cuenta ha sido eliminada por inactividad</h2>
+            <p>Haz click en el siguiente enlace para crearla de nuevo</p>
+            <a href="${link}">
+                <button>Crear cuenta</button>
+            </a>
+        </div>`
+    })
+};
+
+export const deletedProductEmail = async (userEmail, productData) =>{
+    const link = `http://localhost:8080/login`
+    const {title,description,code,_id} = productData
+    await transporter.sendMail({
+        from: options.gmail.adminEmail,
+        to: userEmail,
+        subject: `El producto que usted ha publicado con el nombre ${title} ha sido eliminado`,
+        html: `
+        <div>
+            <h2>Su producto con el nombre ha sido eliminado</h2>
+            <h3>Detalle del producto:</h3>
+            <p>Nombre: ${title}
+            Descripcion:${description}
+            Codigo:${code}
+            ID: ${_id}
+            </p>
+            <p>Haz click en el siguiente enlace para iniciar sesion y publicarlo de nuevo.</p>
+            <a href="${link}">
+                <button>Crear producto</button>
+            </a>
+        </div>`
+    })
 };

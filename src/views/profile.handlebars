@@ -7,22 +7,67 @@
 
         <a href="/api/sessions/logout"><button>Cerrar sesión</button></a>
     </div>
-
+    <hr>
+    {{#if cart}}
     <div>
-        {{#if cart}}
-        <h2>Tu carrito</h2>
-        {{#if cart.products.length}}
+        <h3>Tu carrito - ID: {{cart._id}}</h3>
         {{#each cart.products}}
-        <p>Nombre: {{this.title}}</p>
-        <p>Precio: ${{this.price}}</p>
+        <p>Nombre: {{this.product.title}}</p>
+        <p>Precio: ${{this.product.price}}</p>
         <p>Cantidad: {{this.quantity}}</p>
+        <button onclick="deleteProduct('{{../cart._id}}', '{{this.product._id}}')"
+            class="btn btn-danger">Eliminar</button>
         {{/each}}
-        <a href=""><button>Finalizar compra</button></a>
+        <div>
+            <button onclick="buyCart('{{cart._id}}')" class="btn btn-success">Finalizar compra</button>
+        </div>
         {{else}}
         <p>Tu carrito está vacío</p>
-        {{/if}}
-        {{else}}
-        <p>No hay ningún carrito asociado a tu cuenta</p>
-        {{/if}}
     </div>
+    {{/if}}
 </div>
+
+
+<script>
+    function deleteProduct(cid, pid) {
+        if (confirm("¿Estás seguro de que quieres eliminar este producto del carrito?")) {
+            fetch(`/api/carts/${cid}/product/${pid}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al eliminar el producto del carrito');
+                    }
+                })
+                .then(response => {
+                    if (response.status === 200) {
+                        window.location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Hubo un error al eliminar el producto del carrito');
+                });
+        }
+    }
+
+    function buyCart(cid) {
+        fetch(`/api/carts/${cid}/purchase`, {
+            method: 'POST',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al completar la compra');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Compra completada correctamente');
+                window.location.replace('/ticket');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al completar la compra');
+            });
+    }
+</script>

@@ -15,9 +15,9 @@ import {
 const router = Router();
 
 
-router.post("/register", passport.authenticate("register", { failureRedirect: "/api/session/failregister" }), registerUser);
+router.post("/register", passport.authenticate("register", { failureRedirect: "/api/sessions/failregister" }), registerUser);
 
-router.post("/login", passport.authenticate("login", { failureRedirect: "/api/session/faillogin" }), loginUser);
+router.post("/login", passport.authenticate("login", { failureRedirect: "/api/sessions/faillogin" }), loginUser);
 
 router.get("/logout", logoutUser);
 
@@ -29,16 +29,14 @@ router.get("/githubcallback", githubAuthCallback, async (req, res) => {
 });
 
 router.get("/failregister", async (req, res) => {
-  console.log('Fallo el registro');
   res.send({ error: 'fallo en el registro' });
 });
 
-router.get("/faillogin",(req,res)=>{
-  res.send({error:"fail login"})
+router.get("/faillogin", (req, res) => {
+  res.send({error: "fallo en inicio de sesión"});
 });
 
 router.get("/current", current );
-
 
 router.post("/forgot-password", forgotPassword );
 

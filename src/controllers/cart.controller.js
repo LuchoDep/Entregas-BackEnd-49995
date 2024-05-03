@@ -59,10 +59,7 @@ export const addProductToCart = async (req, res) => {
         const quantity = req.body.quantity;
 
         const result = await CartService.addProductToCart(cid, pid, quantity);
-        res.status(200).json({
-            status: result.status,
-            msg: result
-        });
+        console.log(result);
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
@@ -98,17 +95,12 @@ export const deleteProductFromCart = async (req, res) => {
             return res.status(404).json({ error: "No se encontró el carrito" });
         }
 
-        if (cart.quantity <= 0) {
-            return res.status(400).json({ error: "La cantidad debe ser mayor a 0" });
-        }
-
         await CartService.deleteProductFromCart(cid, pid);
-        res.json({
-            message: "Producto eliminado del carrito",
-            pid: pid,
-            cid: cid,
-        });
 
+        const updatedCart = await CartService.getCartById(cid);
+        if (!updatedCart || updatedCart.products.length === 0) {
+            return { message: "El producto fue eliminado y el carrito está vacío" };
+        }
 
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
@@ -175,7 +167,7 @@ export const updateProductQuantity = async (req, res) => {
 
 export const buyCart = async (req, res) => {
     try {
-        const user = req.params.user;
+        const user = req.session.user.email;
         const cid = req.params.cid;
 
         const cart = await CartService.getCartById(cid);
@@ -220,14 +212,13 @@ export const buyCart = async (req, res) => {
             const ticket = new ticketsModel({
                 code: uuidv4(),
                 purchaser: purchaserEmail,
-                date: Date.now(),
+                purchase_datetime: Date.now(),
                 amount: totalAmount,
-                products: productsList
+                products: cart.products
             });
             console.log("ticket:", ticket);
             console.log("totalAmount:", totalAmount);
-
-
+            
             await ticket.save();
 
             cart.products = [];
@@ -241,4 +232,4 @@ export const buyCart = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
+};

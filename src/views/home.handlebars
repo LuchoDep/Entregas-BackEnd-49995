@@ -1,6 +1,8 @@
 {{#if user}}
 <h3>Bienvenido, {{user.first_name}} {{user.last_name}}</h3>
-<p>Carrito ID: {{cart._id}}</p>
+<div class="col-sm-4">
+    <a href="http://localhost:8080/profile" class="btn btn-success">Perfil</a>
+</div>
 {{/if}}
 
 <h1>Lista de productos</h1>
@@ -14,9 +16,14 @@
                 <div class="card-body">
                     <h5 class="card-title">{{title}}</h5>
                     <p class="card-text">{{description}}</p>
+                    <p class="card-text">Stock:{{stock}}</p>
                     <p class="card-text">Precio: ${{price}}</p>
-                    <form action="/api/carts/{{cart._id}}/product/{{this._id}}" method="post">
-                        <input type="hidden" name="quantity" value="1">
+                    <form id="addToCartForm_{{this._id}}" action="/api/carts/{{../cart._id}}/product/{{this._id}}">
+                        <div class="form-group">
+                            <label for="quantity_{{this._id}}">Cantidad:</label>
+                            <input type="number" class="form-control" id="quantity_{{this._id}}" name="quantity"
+                                value="1" min="1">
+                        </div>
                         <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
                     </form>
                 </div>
@@ -43,3 +50,37 @@
 
     </div>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const forms = document.querySelectorAll("form");
+        forms.forEach(form => {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const cartId = form.action.split("/")[5];
+                const productId = form.action.split("/")[7];
+                const quantity = document.getElementById("quantity_" + productId).value;
+                fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        quantity: quantity
+                    })
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            window.location.replace('/profile');
+                        } else {
+                            console.error("Error al agregar el producto al carrito");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error al agregar el producto al carrito:", error);
+                    });
+            });
+        });
+    });
+</script>

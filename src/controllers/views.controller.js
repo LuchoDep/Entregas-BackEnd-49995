@@ -2,6 +2,7 @@ import productModel from "../dao/models/product.model.js";
 import ProductRepository from "../repository/product.repository.js";
 import cartModel from "../dao/models/carts.model.js";
 import { UserService } from "../repository/index.js";
+import { GetUserDto } from "../dao/dto/userDto.js";
 
 const renderProducts = async (req, res, viewName) => {
     try {
@@ -105,18 +106,28 @@ export const profile = async (req, res) => {
         if (!cid) {
             return res.status(404).send('Carrito no encontrado para este usuario');
         }
-        const cart = await cartModel.findById(cid);
+
+        const cart = await cartModel.findById(cid).populate('products.product');
 
         if (!cart) {
             return res.status(404).send('Carrito no encontrado');
         }
 
-        res.render('profile', { cart, user: req.session.user });
+        res.render('profile', { user: req.session.user, cart, products:cart.products });
     } catch (error) {
         console.error(`Error al obtener el perfil del usuario: ${error.message}`);
         res.status(500).send('Error interno del servidor');
     }
 };
+
+export const ticketView = async (req, res) => {
+    try {
+        res.render(`ticket`)
+    } catch (error) {
+        console.error(`Error al obtener el ticket: ${error.message}`);
+        res.status(500).send('Error interno del servidor');
+    }
+}
 
 export const forgotPassword = async (req, res) => {
     res.render("forgotPassword")
@@ -126,3 +137,17 @@ export const resetPassword = async (req, res) => {
     const token = req.query.token;
     res.render("resetPassword", { token })
 };
+
+export const adminUser = async (req,res) => {
+    try {
+      const users = await UserService.getUsers();
+      
+      const usersData = users.map(user => new GetUserDto(user))
+      console.log(usersMajorData)
+
+      res.render("adminUsers",  {usersData} );
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener usuarios");
+  }
+}

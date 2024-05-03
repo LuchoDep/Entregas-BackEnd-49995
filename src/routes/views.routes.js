@@ -8,8 +8,11 @@ import {
     profile,
     login,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    adminUser,
+    ticketView
 } from "../controllers/views.controller.js";
+import { checkRole } from "../middlewares/auth.js";
 
 const router = Router();
 
@@ -44,5 +47,9 @@ router.get('/profile', privateAccess, profile);
 router.get(`/forgot-password`, forgotPassword);
 
 router.get(`/reset-password`, resetPassword);
+
+router.get(`/adminUsers`, checkRole(["admin"]), adminUser);
+
+router.get(`/ticket`, privateAccess, ticketView)
 
 export default router

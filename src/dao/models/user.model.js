@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
     email:String,
     age:Number,
     password:String,
-    rol: {
+    role: {
         type: String,
         required:true,
         enum:["user", "premium","admin"],

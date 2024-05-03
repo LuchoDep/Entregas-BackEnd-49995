@@ -1,19 +1,24 @@
 export class CreateUserDto {
     constructor(user) {
-        this.fullName = `${user.first_name} ${user.last_name}`;
-        this.firstName = user.first_name;
-        this.lastName = user.last_name;
+        this.FullName = `${user.first_name} ${user.last_name}`;
+        this.first_name = user.first_name;
+        this.last_name = user.last_name;
+        this.age = user.age;
+        this.role = user.role;
         this.email = user.email;
         this.password = user.password;
+        this.id = user._id;
+        this.cart = user.cart;
     }
 }
 
 export class GetUserDto {
-    constructor(user) {
-        this.fullName = `${user.first_name} ${user.last_name}`;
-        this.firstName = user.first_name;
-        this.lastName = user.last_name;
-        this.email = user.email;
-        this.role = user.role;
+    constructor(userDao) {
+        this.first_name = userDao.first_name;
+        this.last_name = userDao.last_name;
+        this.fullName = userDao.FullName;
+        this.age = userDao.age;
+        this.role = userDao.role;
+        this.cart = userDao.cart;
     }
 }

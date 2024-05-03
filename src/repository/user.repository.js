@@ -5,9 +5,9 @@ class UserRepository {
 		this.dao = dao
 	}
 
-	async getUsers() {
-		const users = await this.dao.getUsers();
-		return users;
+	async getUsers(userDB) {
+		const user = new GetUserDto(userDB)
+        return user
 	}
 
 	async getUserById(uid) {
@@ -32,6 +32,22 @@ class UserRepository {
 			throw new Error(`Error al buscar usuario por email: ${error.message}`);
 		}
 	}
+
+	async updateUser(userId, updatedUserData) {
+		try {
+		  return await this.dao.updateUser(userId, updatedUserData);
+		} catch (error) {
+		  throw new Error(`Error al actualizar el usuario: ${error.message}`);
+		}
+	  }
+	
+	  async deleteUser(userId) {
+		try {
+		  return await this.dao.deleteUser(userId);
+		} catch (error) {
+		  throw new Error(`Error al eliminar el usuario: ${error.message}`);
+		}
+	  }
 
 }
 

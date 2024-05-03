@@ -19,9 +19,8 @@ export const loginUser = async (req, res) => {
         last_name: req.user.last_name,
         email: req.user.email,
         age: req.user.age,
+        cart: req.user.cart
     };
-
-    console.log(`carrito desde sessions.controller`, cart);
 
     res.send({ status: "success", payload: req.user });
 };

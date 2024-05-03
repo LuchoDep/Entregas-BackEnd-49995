@@ -19,9 +19,12 @@ const cartSchema = new mongoose.Schema({
     ],
 });
 
-cartSchema.pre("find", function(){
+cartSchema.pre("find", function(next) {
+    console.log("Antes de populate:", this);
     this.populate("products.product");
-});
+    console.log("Después de populate:", this);
+    next();
+  });
 
 cartSchema.index({ 'products.quantity': 1 });
 
