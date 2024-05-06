@@ -27,9 +27,9 @@ class CartRepository {
     }
 
 
-    async addProductToCart(cid, pid, quantity) {
+    async addProductToCart(uid, cid, pid, quantity) {
         try {
-            const result = await this.dao.addProductToCart(cid, pid, quantity);
+            const result = await this.dao.addProductToCart(uid, cid, pid, quantity);
             return result;
         } catch (error) {
             throw new Error(`Error al agregar producto al carrito: ${error.message}`); 

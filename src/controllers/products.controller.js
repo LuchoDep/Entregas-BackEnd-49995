@@ -2,6 +2,7 @@ import { ProductService, UserService } from "../repository/index.js";
 import { CustomError } from "../services/customError.services.js";
 import { generateProductErrorInfo, generateProductErrorParam } from "../services/productError.services.js";
 import { EError } from "../enums/EError.js";
+import productModel from "../dao/models/product.model.js";
 
 export const getProducts = async (req, res) => {
     try {
@@ -61,8 +62,7 @@ export const addProduct = async (req, res) => {
             })
         }
 
-        const user = req.user ? req.user._id : "admin" || "premium";
-        const owner = await UserService.getUserById(user)
+        const user = req.user._id;
         const product = {
             title,
             description,
@@ -70,13 +70,13 @@ export const addProduct = async (req, res) => {
             thumbnail,
             code,
             stock,
+            status: true,
             category,
-            owner: owner
+            owner: user
         }
 
-        const result = await ProductService.addProduct(product);
-        res.send("Se ha creado el producto correctamente", result)
-
+        const result = await ProductService.createProduct(product);
+        res.status(200).send("Se ha creado el producto correctamente")
     } catch (error) {
         if (error.cause) {
             req.logger.warn("error 400 creando el producto")

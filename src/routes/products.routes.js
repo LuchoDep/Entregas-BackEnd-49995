@@ -8,7 +8,6 @@ import {
 } from "../controllers/products.controller.js";
 import { checkRole } from "../middlewares/auth.js";
 import { addLogger } from "../config/logger.config.js";
-import { uploader } from "../config/multer.config.js";
 import { errorHandler} from "../middlewares/errorHandler.js";
 
 const productRouter = Router();
@@ -21,7 +20,7 @@ productRouter.get('/', addLogger, getProducts);
 
 productRouter.get("/:pid", addLogger, getProductById);
 
-productRouter.post("/", addLogger, checkRole(["admin", "premium"]), uploader.single('thumbnail'), addProduct);
+productRouter.post("/", addLogger, addProduct);
 
 productRouter.put("/:pid", addLogger, checkRole(["admin", "premium"]), updateProduct);
 

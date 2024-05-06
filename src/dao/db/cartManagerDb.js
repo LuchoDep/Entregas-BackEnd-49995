@@ -56,7 +56,7 @@ class CartManagerDb {
 		}
 	}
 
-	addProductToCart = async (cid, pid, quantity) => {
+	addProductToCart = async (uid, cid, pid, quantity) => {
 		try {
 
 			if (isNaN(quantity) || quantity <= 0) {
@@ -73,6 +73,10 @@ class CartManagerDb {
 
 			if (!product) {
 				throw new Error(`El producto con el id ${pid} no existe`);
+			}
+
+			if (String(product.owner) === String(uid)) {
+				throw new Error('No puedes agregar tu propio producto al carrito');
 			}
 
 			const productInCart = cart.products.find(item => item.product._id.equals(pid));

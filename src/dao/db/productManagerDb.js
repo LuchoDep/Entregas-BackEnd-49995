@@ -4,59 +4,64 @@ class ProductManagerDB {
 
 	async getProducts(limit, page, sort, category, availability, query) {
 
-			const filter = {};
-			if (category) {
-				filter.category = category;
-			}
-			if (availability) {
-				filter.stock = { $gt: 0 };
-			}
-			if (query) {
-				filter.$or = [
-					{ title: { $regex: new RegExp(query, 'i') } },
-				];
-			}
-	
-			const options = {
-				limit: limit ? parseInt(limit, 10) : 5,
-				page: page !== undefined ? parseInt(page, 10) : 1,
-				sort: { price: sort === "asc" ? 1 : -1 },
-				lean: true
-			};
-	
-			const products = await productModel.paginate(filter, options);
-	
-			const queryParamsForPagination = {
-				limit: options.limit,
-				page: options.page,
-				sort,
-				category,
-				availability,
-				query
-			};
-	
-			Object.keys(queryParamsForPagination).forEach(
-				key => queryParamsForPagination[key] === undefined && delete queryParamsForPagination[key]
-			);
-	
-			const baseLink = '/products';
-			const prevLink = products.hasPrevPage
-				? `${baseLink}?${new URLSearchParams({ ...queryParamsForPagination, page: options.page - 1 }).toString()}`
-				: null;
-	
-			const nextLink = products.hasNextPage
-				? `${baseLink}?${new URLSearchParams({ ...queryParamsForPagination, page: options.page + 1 }).toString()}`
-				: null;
-	
-			return {
-				status: "success",
-				msg: {
-					...products,
-					prevLink,
-					nextLink
-				}
-			};
+		const filter = {};
+		if (category) {
+			filter.category = category;
+		}
+		if (availability) {
+			filter.stock = { $gt: 0 };
+		}
+		if (query) {
+			filter.$or = [
+				{ title: { $regex: new RegExp(query, 'i') } },
+			];
+		}
+
+		const options = {
+			limit: limit ? parseInt(limit, 10) : 5,
+			page: page !== undefined ? parseInt(page, 10) : 1,
+			sort: { price: sort === "asc" ? 1 : -1 },
+			lean: true
 		};
+
+		const products = await productModel.paginate(filter, options);
+
+		const queryParamsForPagination = {
+			limit: options.limit,
+			page: options.page,
+			sort,
+			category,
+			availability,
+			query
+		};
+
+		Object.keys(queryParamsForPagination).forEach(
+			key => queryParamsForPagination[key] === undefined && delete queryParamsForPagination[key]
+		);
+
+		const baseLink = '/products';
+		const prevLink = products.hasPrevPage
+			? `${baseLink}?${new URLSearchParams({ ...queryParamsForPagination, page: options.page - 1 }).toString()}`
+			: null;
+
+		const nextLink = products.hasNextPage
+			? `${baseLink}?${new URLSearchParams({ ...queryParamsForPagination, page: options.page + 1 }).toString()}`
+			: null;
+
+		return {
+			status: "success",
+			msg: {
+				...products,
+				prevLink,
+				nextLink
+			}
+		};
+	};
+
+	async createProduct(product) {
+		const newProduct = await productModel.create(product)
+		return newProduct
+	};
 
 	async getProductById(pid) {
 		try {

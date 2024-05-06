@@ -168,3 +168,7 @@ export const adminUser = async (req, res) => {
         res.status(500).send("Error al obtener usuarios");
     }
 };
+
+export const addProducts = async (req, res) => {
+    res.render(`addProducts`)
+};

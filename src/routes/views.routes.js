@@ -10,9 +10,9 @@ import {
     forgotPassword,
     resetPassword,
     adminUser,
-    ticketView
+    ticketView,
+    addProducts
 } from "../controllers/views.controller.js";
-import { checkRole } from "../middlewares/auth.js";
 
 const router = Router();
 
@@ -32,7 +32,7 @@ const privateAccess = (req, res, next) => {
 
 router.get('/products', privateAccess, products);
 
-router.get('/', privateAccess, realTimeProducts);
+router.get('/addProducts', addProducts)
 
 router.get('/', privateAccess, home);
 

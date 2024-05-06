@@ -55,11 +55,12 @@ export const createCart = async (req, res) => {
 export const addProductToCart = async (req, res) => {
 
     try {
+        const uid = req.user._id;
         const cid = req.params.cid;
         const pid = req.params.pid;
         const quantity = req.body.quantity;
 
-        const result = await CartService.addProductToCart(cid, pid, quantity);
+        const result = await CartService.addProductToCart(uid, cid, pid, quantity);
         console.log(result);
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
