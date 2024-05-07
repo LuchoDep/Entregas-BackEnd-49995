@@ -1,7 +1,7 @@
 {{#if user}}
 <h3>Bienvenido, {{user.first_name}} {{user.last_name}}</h3>
 <div class="col-sm-4">
-    <a href="http://localhost:8080/profile" class="btn btn-success">Perfil</a>
+    <a href="/profile" class="btn btn-success">Perfil</a>
 </div>
 {{/if}}
 
@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col-sm-4">
                 {{#if products.hasPrevPage}}
-                <a href="http://localhost:8080/products?page={{products.prevPage}}" class="btn btn-primary">&laquo;
+                <a href="products?page={{products.prevPage}}" class="btn btn-primary">&laquo;
                     Página Anterior</a>
                 {{/if}}
             </div>
@@ -42,7 +42,7 @@
             </div>
             <div class="col-sm-4 text-right">
                 {{#if products.hasNextPage}}
-                <a href="http://localhost:8080/products?page={{products.nextPage}}" class="btn btn-primary">Página
+                <a href="/products?page={{products.nextPage}}" class="btn btn-primary">Página
                     Siguiente &raquo;</a>
                 {{/if}}
             </div>

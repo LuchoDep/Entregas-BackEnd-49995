@@ -38,7 +38,7 @@ export const verifyEmailToken = (token)=>{
 };
 
 export const sendRecoveryPass = async (userEmail, token) => {
-    const link = `http://localhost:8080/reset-password?token=${token}`
+    const link = `/reset-password?token=${token}`
     await transporter.sendMail({
         from: ADMIN_USER,
         to: userEmail,
@@ -55,7 +55,7 @@ export const sendRecoveryPass = async (userEmail, token) => {
 };
 
 export const deletedUserEmail = async (userEmail) => {
-    const link = `http://localhost:8080/register`
+    const link = `/register`
     await transporter.sendMail({
         from: ADMIN_USER,
         to: userEmail,
@@ -72,7 +72,7 @@ export const deletedUserEmail = async (userEmail) => {
 };
 
 export const deletedProductEmail = async (userEmail, productData) =>{
-    const link = `http://localhost:8080/login`
+    const link = `/login`
     const {title,description,code,_id} = productData
     await transporter.sendMail({
         from: ADMIN_USER,
@@ -96,7 +96,7 @@ export const deletedProductEmail = async (userEmail, productData) =>{
 };
 
 export const ticketEmail = async (userEmail, ticket) =>{
-    const link = `http://localhost:8080/login`
+    const link = `/login`
     
     await transporter.sendMail({
         from: ADMIN_USER,

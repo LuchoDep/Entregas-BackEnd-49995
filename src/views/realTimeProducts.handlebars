@@ -36,7 +36,7 @@
     <div class="row">
         <div class="col-sm-4">
             {{#if products.hasPrevPage}}
-            <a href="http://localhost:8080/?page={{products.prevPage}}" class="btn btn-primary">&laquo;
+            <a href="/?page={{products.prevPage}}" class="btn btn-primary">&laquo;
                 Página Anterior</a>
             {{/if}}
         </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="col-sm-4 text-right">
             {{#if products.hasNextPage}}
-            <a href="http://localhost:8080/?page={{products.nextPage}}" class="btn btn-primary">Página
+            <a href="/?page={{products.nextPage}}" class="btn btn-primary">Página
                 Siguiente &raquo;</a>
             {{/if}}
         </div>
